@@ -1,401 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lo">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Entertainment & Shop Hub</title>
+    <title>HELLO WELCOME TO WEBSITE</title>
     <style>
-        /* Global Styles */
+        /* ຕັ້ງຄ່າພື້ນຖານ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Noto Sans Lao', sans-serif;
         }
 
         body {
-            background-color: #121212;
-            color: #ffffff;
-            overflow-x: hidden;
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
         }
 
-        /* Running Text (Marquee) */
-        .marquee-container {
-            background: linear-gradient(90deg, #ff416c, #ff4b2b);
-            color: white;
-            padding: 10px 0;
-            font-weight: bold;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-        }
-
-        /* Navigation Bar */
+        /* ສ່ວນຫົວ (Header) */
         header {
-            background-color: #1f1f1f;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-        }
-
-        nav ul li a {
-            color: #bbb;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        nav ul li a:hover, nav ul li a.active {
-            color: #00f2fe;
-        }
-
-        /* Main Content Sections */
-        .section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 40px 20px;
             text-align: center;
-            background: linear-gradient(45deg, #f857a6, #ff5858);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden; /* ປ້ອງກັນບໍ່ໃຫ້ໜັງສືເລື່ອນທະລຸອອກນອກຂອບຫົວເວັບ */
         }
 
-        .section-desc {
-            text-align: center;
-            color: #888;
-            margin-bottom: 40px;
-        }
-
-        /* Grid Layout for Products and Videos */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        /* Card Styles */
-        .card {
-            background-color: #1f1f1f;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.2);
-        }
-
-        .card-img {
+        /* ປັບປຸງ: ໂຕໜັງສືເລື່ອນດ້ານຂ້າງ (Marquee Animation) */
+        .marquee-container {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background-color: #333;
-        }
-
-        .card-content {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #fff;
-        }
-
-        .card-text {
-            color: #aaa;
-            font-size: 0.9rem;
-            line-height: 1.4;
+            overflow: hidden;
+            white-space: nowrap;
             margin-bottom: 15px;
         }
 
-        .price {
-            font-size: 1.3rem;
-            color: #00f2fe;
-            font-weight: bold;
-        }
-
-        .video-responsive {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-        }
-
-        .video-responsive iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        /* Hero Home Section */
-        .hero {
-            text-align: center;
-            padding: 100px 20px;
-            background: radial-gradient(circle, rgba(31,31,31,1) 0%, rgba(18,18,18,1) 100%);
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: #aaa;
-            max-width: 600px;
-            margin: 0 auto 30px auto;
-        }
-
-        .btn {
+        .welcome-text {
             display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(45deg, #ff416c, #ff4b2b);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
+            font-size: 2.5rem;
             font-weight: bold;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
+            letter-spacing: 2px;
+            padding-left: 100%; /* ໃຫ້ເລີ່ມເລື່ອນຈາກຂອບຂວາສຸດ */
+            animation: marquee 15s linear infinite;
         }
 
-        .btn:hover {
+        /* ສ້າງ Animation ສໍາລັບໃຫ້ໜັງສືເລື່ອນ */
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* ຮູບວົງມົນໂລໂກ້ */
+        .logo-circle {
+            width: 130px;
+            height: 130px;
+            background-color: #5aa2dc;
+            border: 4px solid #ffffff;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-circle:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
         }
 
-        /* Footer */
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* ເມນູຫຼັກ (Navigation Bar) */
+        nav {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+
+        nav ul li {
+            margin: 5px 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #4a5568;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #2a5298;
+            color: white;
+        }
+
+        /* ເນື້ອຫາຫຼັກ (Main Content) */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Grid Layout ສໍາລັບຈັດສ່ວນຕ່າງໆ */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ກ່ອງເນື້ອຫາ (Cards) */
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            color: #2a5298;
+            border-bottom: 3px solid #5aa2dc;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        /* ຈັດລາຍການສິນຄ້າ ແລະ ເກມ */
+        .item-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .item-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .item-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ສ່ວນຂໍ້ມູນຜູ້ຕິດຕໍ່ (Sidebar / Footer) */
+        .owner-info {
+            background-color: #ffffff;
+        }
+
+        .contact-info {
+            margin-top: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .contact-item strong {
+            color: #2a5298;
+            margin-right: 8px;
+        }
+
+        /* ສ່ວນທ້າຍເວັບ (Footer) */
         footer {
-            background-color: #0a0a0a;
+            background-color: #1e3c72;
+            color: white;
             text-align: center;
             padding: 20px;
-            color: #555;
+            margin-top: 5px;
             font-size: 0.9rem;
-            margin-top: 60px;
-            border-top: 1px solid #1f1f1f;
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. Running Welcome Text (Marquee) -->
-    <div class="marquee-container">
-        <marquee behavior="scroll" direction="left" scrollamount="8">
-            🔥 Welcome to Mega Entertainment & Shop Hub! Discover premium geek products and enjoy the best cartoon animations from YouTube! Update every week! 🔥
-        </marquee>
-    </div>
-
-    <!-- 2. Navigation Bar -->
     <header>
-        <div class="nav-container">
-            <div class="logo">MEGA HUB</div>
-            <nav>
-                <ul>
-                    <li><a onclick="switchTab('home')" id="nav-home" class="active">Home</a></li>
-                    <li><a onclick="switchTab('products')" id="nav-products">Products</a></li>
-                    <li><a onclick="switchTab('cartoons')" id="nav-cartoons">Cartoon Videos</a></li>
-                </ul>
-            </nav>
+        <div class="marquee-container">
+            <div class="welcome-text">HELLO WELCOME TO WEBSITE</div>
         </div>
+        <div class="logo-circle"></div>
+        <div class="profile-name">Soukchai and Buachan</div>
     </header>
 
-    <!-- 3. HOME SECTION -->
-    <section id="home" class="section active">
-        <div class="hero">
-            <h1>Explore The Ultimate Geek Universe</h1>
-            <p>Your number one destination for high-quality action figures, exclusive anime merchandise, and endless hours of cartoon entertainment.</p>
-            <button class="btn" onclick="switchTab('products')">Shop Merchandise Now</button>
-        </div>
-    </section>
+    <nav>
+        <ul>
+            <li><a href="#home">ເມນູ</a></li>
+            <li><a href="#products">ສິນຄ້າ</a></li>
+            <li><a href="#entertainment">ຄວາມບັນເທິງ</a></li>
+            <li><a href="#news">ຂ່າວສານ</a></li>
+        </ul>
+    </nav>
 
-    <!-- 4. PRODUCTS SECTION (เยอะๆ แน่นๆ) -->
-    <section id="products" class="section">
-        <h2>Premium Merchandise</h2>
-        <p class="section-desc">Top tier collectibles and accessories curated just for you</p>
-        
-        <div class="grid-container">
-            <!-- Product 1 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1608889174637-3c99800e1791?w=500" alt="Action Figure" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Limited Edition Hero Figure</h3>
-                    <p class="card-text">High-quality PVC material, hand-painted with extreme details. Perfect for collectors.</p>
-                    <div class="price">$149.99</div>
-                </div>
-            </div>
-            <!-- Product 2 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=500" alt="Anime Hoodie" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Cyberpunk Ninja Hoodie</h3>
-                    <p class="card-text">Comfortable cotton-blend streetwear hoodie featuring futuristic cyber designs.</p>
-                    <div class="price">$59.99</div>
-                </div>
-            </div>
-            <!-- Product 3 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500" alt="Gaming Mouse" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">RGB Mechanical Keyboard</h3>
-                    <p class="card-text">Customizable RGB backlit keys with blue switches for the ultimate gaming feedback.</p>
-                    <div class="price">$89.99</div>
-                </div>
-            </div>
-            <!-- Product 4 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=500" alt="Poster" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Vintage Anime Poster Pack</h3>
-                    <p class="card-text">Set of 5 high-definition canvas prints featuring classic retro animations.</p>
-                    <div class="price">$24.99</div>
-                </div>
-            </div>
-            <!-- Product 5 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=500" alt="Console" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Retro Mini Gaming Console</h3>
-                    <p class="card-text">Pre-loaded with over 500 classic 8-bit games. Plug and play via HDMI.</p>
-                    <div class="price">$75.00</div>
-                </div>
-            </div>
-            <!-- Product 6 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" alt="Artbook" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Concept Art Design Book</h3>
-                    <p class="card-text">Hardcover collection of landscape and character designs from famous illustrators.</p>
-                    <div class="price">$45.00</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="container">
+        <div class="main-grid">
+            
+            <div class="main-content">
+                
+                <section id="products" class="card">
+                    <h2>🛒 ສິນຄ້າຍອດນິຍົມ (Products)</h2>
+                    <div class="item-list">
+                        <div class="item-box">
+                            <h4>ສິນຄ້າ IT & Gadget</h4>
+                            <p style="color: #718096; font-size: 0.9rem; margin-top: 5px;">ອຸປະກອນເສີມມືຖື ແລະ ຄອມພິວເຕີຄຸນນະພາບສູງ</p>
+                        </div>
+                        <div class="item-box">
+                            <h4>ເສື້ອຜ້າແຟຊັ່ນ</h4>
+                            <p style="color: #718096; font-size: 0.9rem; margin-top: 5px;">ເສື້ອຜ້າໄວລຸ້ນ ທັນສະໄໝ ນໍາເຂົ້າຈາກຕ່າງປະເທດ</p>
+                        </div>
+                        <div class="item-box">
+                            <h4>ເຄື່ອງດື່ມ & ຂະໜົມ</h4>
+                            <p style="color: #718096; font-size: 0.9rem; margin-top: 5px;">ເຄື່ອງດື່ມສຸດເຢັນຊື່ນໃຈ ແລະ ເຂົ້າໜົມແຊບໆ</p>
+                        </div>
+                    </div>
+                </section>
 
-    <!-- 5. CARTOON VIDEOS SECTION (ฝังคลิปจาก YouTube แบบถูกลิขสิทธิ์) -->
-    <section id="cartoons" class="section">
-        <h2>Trending Cartoon Videos</h2>
-        <p class="section-desc">Watch awesome animations and short movies directly from YouTube</p>
-        
-        <div class="grid-container">
-            <!-- Video 1 -->
-            <div class="card">
-                <div class="video-responsive">
-                    <iframe src="https://www.youtube.com/embed/AqR_Gom8CqI" allowfullscreen></iframe>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Minecraft Animation Short</h3>
-                    <p class="card-text">An epic blocky adventure full of action and comedy. Created by community artists.</p>
-                </div>
-            </div>
-            <!-- Video 2 -->
-            <div class="card">
-                <div class="video-responsive">
-                    <iframe src="https://www.youtube.com/embed/d96cjJhvlMA" allowfullscreen></iframe>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Meets the Cyber-Pet</h3>
-                    <p class="card-text">A heartwarming story of a young kid meeting a futuristic AI pet companion.</p>
-                </div>
-            </div>
-            <!-- Video 3 -->
-            <div class="card">
-                <div class="video-responsive">
-                    <iframe src="https://www.youtube.com/embed/399049754" style="display:none;"></iframe>
-                    <!-- เปลียนเป็น ID วิดีโอยอดนิยมทั่วไปเพื่อความปลอดภัย -->
-                    <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" allowfullscreen></iframe>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Classic Looney Tunes Tribute</h3>
-                    <p class="card-text">A beautifully rendered compilation celebrating vintage animated humor.</p>
-                </div>
-            </div>
-            <!-- Video 4 -->
-            <div class="card">
-                <div class="video-responsive">
-                    <iframe src="https://www.youtube.com/embed/k9YvInI9lOg" allowfullscreen></iframe>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Chibi Outer Space Odyssey</h3>
-                    <p class="card-text">Adorable astronauts exploring strange planets in a cute chibi style animation.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+                <section id="entertainment" class="card">
+                    <h2>🎮 ຄວາມບັນເທິງ ແລະ ເກມ (Entertainment & Games)</h2>
+                    <p style="margin-bottom: 15px;">ລວມຄວາມບັນເທິງທຸກຮູບແບບ ບໍ່ວ່າຈະເປັນການແນະນໍາເກມມ່ວນໆ, ເພງດັງ, ແລະ ວິດີໂອທີ່ກໍາລັງເປັນກະແສ.</p>
+                    <div class="item-list">
+                        <div class="item-box" style="border-left: 4px solid #e53e3e;">
+                            <strong>ເກມອອນລາຍສຸດຮິດ</strong>
+                            <p style="font-size: 0.9rem; margin-top: 5px;">ແນະນໍາເຕັກນິກການຫຼິ້ນ ແລະ ການເຕີມເກມສຸດຄຸ້ມ</p>
+                        </div>
+                        <div class="item-box" style="border-left: 4px solid #ecc94b;">
+                            <strong>ຟັງເພງ & ເບິ່ງໜັງ</strong>
+                            <p style="font-size: 0.9rem; margin-top: 5px;">ຣີວິວໜັງໃໝ່ ແລະ ເພງທີ່ກໍາລັງມາແຮງໃນຕອນນີ້</p>
+                        </div>
+                    </div>
+                </section>
 
-    <!-- Footer -->
+                <section class="card">
+                    <h2>📱 ແອັບດັງໃນລາວ (Popular Apps in Laos)</h2>
+                    <p style="margin-bottom: 15px;">ຮວບຮວມເອົາແອັບພລິເຄຊັນທີ່ຄົນລາວນິຍົມໃຊ້ຫຼາຍທີ່ສຸດໃນຍຸກປັດຈຸບັນ ເພື່ອຄວາມສະດວກສະບາຍໃນຊີວິດປະຈໍາວັນ:</p>
+                    <ul style="margin-left: 20px; color: #4a5568;">
+                        <li style="margin-bottom: 8px;"><strong>BCELOne:</strong> ແອັບທະນາຄານອັນດັບໜຶ່ງໃນລາວ ໃຊ້ງ່າຍ ຈ່າຍສະດວກ.</li>
+                        <li style="margin-bottom: 8px;"><strong>Loca:</strong> ແອັບເອີ້ນລົດໂດຍສານ ແລະ ບໍລິການຂົນສົ່ງທີ່ທັນສະໄໝ.</li>
+                        <li style="margin-bottom: 8px;"><strong>Sabaidee App:</strong> ແອັບບໍລິການ ແລະ ຂໍ້ມູນຂ່າວສານຕ່າງໆ.</li>
+                    </ul>
+                </section>
+
+                <section id="news" class="card">
+                    <h2>📰 ข່າວສານອັບເດດ (Latest News)</h2>
+                    <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <span style="background: #2a5298; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">ຂ່າວໄອທີ</span>
+                        <h4 style="margin-top: 5px;">ເຕັກໂນໂລຊີໃນລາວກ້າວໄກ ເປີດຕົວລະບົບການຊໍາລະເງິນແບບໃໝ່</h4>
+                    </div>
+                    <div style="background: #f7fafc; padding: 15px; border-radius: 8px;">
+                        <span style="background: #48bb78; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">ຂ່າວທົ່ວໄປ</span>
+                        <h4 style="margin-top: 5px;">ກິດຈະກໍາດີໆ ສໍາລັບໄວລຸ້ນຍຸກດິຈિຕອນ ທີ່ກໍາລັງຈະຈັດຂຶ້ນໄວໆນີ້</h4>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="sidebar">
+                <div class="card owner-info">
+                    <h2>👤 ຂໍ້ມູນກ່ຽວກັບເຈົ້າຂອງເວັບໄຊທ໌</h2>
+                    <p>ສະບາຍດີ! ຂ້າພະເຈົ້າຊື່ <strong>Soukchai and Buachan</strong> ເປັນຜູ້ພັດທະນາ ແລະ ສ້າງສັນເນື້ອຫາໃນເວັບໄຊທ໌ນີ້ ຍິນດີຕ້ອນຮັບທຸກໆທ່ານເຂົ້າສູ່ພື້ນທີ່ແຫ່ງຄວາມຮູ້ ແລະ ຄວາມບັນເທິງ.</p>
+                    
+                    <div class="contact-info">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: #4a5568;">ຊ່ອງທາງການຕິດຕໍ່:</h3>
+                        <div class="contact-item">
+                            <strong>💬 ວອທເອັບ:</strong> <span>02095038956</span>
+                        </div>
+                        <div class="contact-item">
+                            <strong>📧 ອີເມວ:</strong> <span>soukchaiph@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <footer>
-        &copy; 2026 Mega Entertainment Hub. Built for Academic Presentation. Powered by GitHub Pages.
+        <p>&copy; 2026 Soukchai and Buachan. All Rights Reserved.</p>
     </footer>
 
-    <!-- JavaScript for Tab Switching (SPA Feel) -->
-    <script>
-        function switchTab(tabId) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(sec => sec.classList.remove('active'));
-
-            // Remove active class from all links
-            const navLinks = document.querySelectorAll('nav ul li a');
-            navLinks.forEach(link => link.classList.remove('active'));
-
-            // Show target section
-            document.getElementById(tabId).classList.add('active');
-
-            // Set active link highlight
-            document.getElementById('nav-' + tabId).classList.add('active');
-            
-            // Scroll smoothly to top when changing tabs
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-    </script>
 </body>
 </html>
