@@ -793,4 +793,301 @@
 
   <ul class="nav-links">
     <li><a href="#products" class="nav-link">🛒 ສິນຄ້າ</a></li>
-    <li><a href="#enterta
+    <li><a href="#entertainment" class="nav-link">🎮 ຄວາມບັນເທິງ</a></li>
+    <li><a href="#apps" class="nav-link">📱 ແອັບ</a></li>
+    <li><a href="#news" class="nav-link">📰 ຂ່າວ</a></li>
+    <li><a href="#contact" class="nav-link">👤 ຕິດຕໍ່</a></li>
+  </ul>
+
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
+  <ul>
+    <li><a href="#products" class="mob-link"><span class="menu-icon">🛒</span> ສິນຄ້າຍອດນິຍົມ</a></li>
+    <li><a href="#entertainment" class="mob-link"><span class="menu-icon">🎮</span> ຄວາມບັນເທິງ & ເກມ</a></li>
+    <li><a href="#apps" class="mob-link"><span class="menu-icon">📱</span> ແອັບດັງໃນລາວ</a></li>
+    <li><a href="#news" class="mob-link"><span class="menu-icon">📰</span> ຂ່າວສານ</a></li>
+    <li><a href="#contact" class="mob-link"><span class="menu-icon">👤</span> ຂໍ້ມູນຕິດຕໍ່</a></li>
+  </ul>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<header class="hero" id="top">
+  <div class="hero-badge">✦ ຍິນດີຕ້ອນຮັບ Welcome</div>
+  <div class="hero-avatar">🌟</div>
+  <h1>Soukchai & Buachan</h1>
+  <p>ພື້ນທີ່ຂອງຄວາມຮູ້, ສິນຄ້າ ແລະ ຄວາມບັນເທິງ ສໍາລັບທຸກໆທ່ານ</p>
+  <a href="#products" class="hero-cta">ເລີ່ມຕົ້ນເລີຍ →</a>
+</header>
+
+<!-- Marquee -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-inner">
+    HELLO WELCOME TO WEBSITE <span class="marquee-sep">✦</span>
+    ສິນຄ້າ IT &amp; Gadget <span class="marquee-sep">✦</span>
+    ຄວາມບັນເທິງ &amp; ເກມ <span class="marquee-sep">✦</span>
+    ແອັບດັງໃນລາວ <span class="marquee-sep">✦</span>
+    ຂ່າວສານທົ່ວໄປ <span class="marquee-sep">✦</span>
+    HELLO WELCOME TO WEBSITE <span class="marquee-sep">✦</span>
+    ສິນຄ້າ IT &amp; Gadget <span class="marquee-sep">✦</span>
+    ຄວາມບັນເທິງ &amp; ເກມ <span class="marquee-sep">✦</span>
+    ແອັບດັງໃນລາວ <span class="marquee-sep">✦</span>
+    ຂ່າວສານທົ່ວໄປ <span class="marquee-sep">✦</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     MAIN CONTENT
+══════════════════════════════ -->
+<div class="container">
+  <section class="section">
+    <div class="main-grid">
+
+      <!-- LEFT COLUMN -->
+      <div>
+
+        <!-- Products -->
+        <div id="products" class="card fade-in">
+          <div class="card-heading">
+            <span class="card-icon">🛒</span>
+            ສິນຄ້າຍອດນິຍົມ
+          </div>
+          <div class="product-grid">
+            <div class="product-item">
+              <span class="pi-emoji">💻</span>
+              <h4>ສິນຄ້າ IT & Gadget</h4>
+              <p>ອຸປະກອນເສີມມືຖື ແລະ ຄອມພິວເຕີຄຸນນະພາບສູງ</p>
+            </div>
+            <div class="product-item">
+              <span class="pi-emoji">👗</span>
+              <h4>ເສື້ອຜ້າແຟຊັ່ນ</h4>
+              <p>ເສື້ອຜ້າໄວລຸ້ນ ທັນສະໄໝ ນໍາເຂົ້າຈາກຕ່າງປະເທດ</p>
+            </div>
+            <div class="product-item">
+              <span class="pi-emoji">🧃</span>
+              <h4>ເຄື່ອງດື່ມ & ຂະໜົມ</h4>
+              <p>ເຄື່ອງດື່ມສຸດເຢັນຊື່ນໃຈ ແລະ ເຂົ້າໜົມແຊບໆ</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entertainment -->
+        <div id="entertainment" class="card fade-in">
+          <div class="card-heading">
+            <span class="card-icon">🎮</span>
+            ຄວາມບັນເທິງ ແລະ ເກມ
+          </div>
+          <p style="color:var(--muted);font-size:.9rem;margin-bottom:18px;">
+            ລວມຄວາມບັນເທິງທຸກຮູບແບບ ບໍ່ວ່າຈະເປັນການແນະນໍາເກມ, ເພງດັງ ແລະ ວິດີໂອທີ່ກໍາລັງເປັນກະແສ.
+          </p>
+          <div class="ent-grid">
+            <div class="ent-item red">
+              <strong>🕹️ ເກມອອນລາຍສຸດຮິດ</strong>
+              <p>ແນະນໍາເຕັກນິກການຫຼິ້ນ ແລະ ການເຕີມເກມສຸດຄຸ້ມ</p>
+            </div>
+            <div class="ent-item yellow">
+              <strong>🎵 ຟັງເພງ & ເບິ່ງໜັງ</strong>
+              <p>ຣີວິວໜັງໃໝ່ ແລະ ເພງທີ່ກໍາລັງມາແຮງໃນຕອນນີ້</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apps -->
+        <div id="apps" class="card fade-in">
+          <div class="card-heading">
+            <span class="card-icon">📱</span>
+            ແອັບດັງໃນລາວ
+          </div>
+          <p style="color:var(--muted);font-size:.9rem;margin-bottom:18px;">
+            ຮວບຮວມເອົາແອັບທີ່ຄົນລາວນິຍົມໃຊ້ຫຼາຍທີ່ສຸດໃນຍຸກປັດຈຸບັນ.
+          </p>
+          <ul class="app-list">
+            <li>
+              <span class="app-dot"></span>
+              <div>
+                <strong>BCELOne</strong>
+                <p style="font-size:.85rem;color:var(--muted);">ແອັບທະນາຄານອັນດັບໜຶ່ງໃນລາວ ໃຊ້ງ່າຍ ຈ່າຍສະດວກ.</p>
+              </div>
+            </li>
+            <li>
+              <span class="app-dot"></span>
+              <div>
+                <strong>Loca</strong>
+                <p style="font-size:.85rem;color:var(--muted);">ແອັບເອີ້ນລົດໂດຍສານ ແລະ ບໍລິການຂົນສົ່ງທີ່ທັນສະໄໝ.</p>
+              </div>
+            </li>
+            <li>
+              <span class="app-dot"></span>
+              <div>
+                <strong>Sabaidee App</strong>
+                <p style="font-size:.85rem;color:var(--muted);">ແອັບບໍລິການ ແລະ ຂໍ້ມູນຂ່າວສານຕ່າງໆ.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- News -->
+        <div id="news" class="card fade-in">
+          <div class="card-heading">
+            <span class="card-icon">📰</span>
+            ຂ່າວສານທົ່ວໄປ
+          </div>
+          <div class="news-list">
+            <div class="news-item">
+              <span class="news-tag blue">ຂ່າວໄອທີ</span>
+              <h4>ເຕັກໂນໂລຊີໃນລາວກ້າວໄກ ເປີດຕົວລະບົບການຊໍາລະເງິນແບບໃໝ່</h4>
+            </div>
+            <div class="news-item">
+              <span class="news-tag green">ຂ່າວທົ່ວໄປ</span>
+              <h4>ກິດຈະກໍາດີໆ ສໍາລັບໄວລຸ້ນຍຸກດິຈິຕອນ ທີ່ກໍາລັງຈະຈັດຂຶ້ນໄວໆນີ້</h4>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end left -->
+
+      <!-- SIDEBAR -->
+      <div id="contact">
+        <div class="owner-card fade-in">
+          <div class="owner-avatar">👤</div>
+          <h2>Soukchai & Buachan</h2>
+          <p>ຜູ້ພັດທະນາ ແລະ ສ້າງສັນເນື້ອຫາ ຍິນດີຕ້ອນຮັບທຸກໆທ່ານ ເຂົ້າສູ່ພື້ນທີ່ແຫ່ງຄວາມຮູ້ ແລະ ຄວາມບັນເທິງ.</p>
+
+          <div class="divider"></div>
+
+          <div class="contact-row">
+            <div class="contact-icon">💬</div>
+            <div>
+              <div class="contact-label">WhatsApp</div>
+              <div class="contact-val">02095038956<br/>2091679132</div>
+            </div>
+          </div>
+
+          <div class="contact-row">
+            <div class="contact-icon">📧</div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-val">soukchaiph@gmail.com</div>
+            </div>
+          </div>
+
+          <div class="social-row">
+            <a class="social-btn" href="mailto:soukchaiph@gmail.com">📧 Email</a>
+            <a class="social-btn" href="https://wa.me/02095038956">💬 Chat</a>
+          </div>
+        </div>
+      </div><!-- end sidebar -->
+
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer>
+  <p>&copy; 2026 <strong>Soukchai and Buachan</strong>. All Rights Reserved.</p>
+</footer>
+
+<!-- Scroll-to-top -->
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+<!-- ══════════════════════════════
+     JAVASCRIPT
+══════════════════════════════ -->
+<script>
+  /* ─── Hamburger / mobile menu ─── */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const overlay    = document.getElementById('overlay');
+
+  function openMenu() {
+    hamburger.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    mobileMenu.classList.add('open');
+    overlay.style.display = 'block';
+    // force reflow then fade in
+    requestAnimationFrame(() => overlay.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    // hide overlay after transition
+    overlay.addEventListener('transitionend', function hide() {
+      overlay.style.display = 'none';
+      overlay.removeEventListener('transitionend', hide);
+    });
+  }
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  overlay.addEventListener('click', closeMenu);
+
+  // Close on mobile link click
+  document.querySelectorAll('.mob-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  /* ─── Active nav link on scroll ─── */
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  /* ─── Fade-in on scroll ─── */
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const fadeObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        fadeObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  fadeEls.forEach(el => fadeObs.observe(el));
+
+  /* ─── Scroll-to-top ─── */
+  const scrollBtn = document.getElementById('scrollTop');
+
+  window.addEventListener('scroll', () => {
+    scrollBtn.classList.toggle('show', window.scrollY > 400);
+  }, { passive: true });
+
+  scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
