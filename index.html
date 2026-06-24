@@ -1,1093 +1,142 @@
 <!DOCTYPE html>
-<html lang="lo">
+<html lang="th">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soukchai & Buachan</title>
+  <title>ห้องเรียนออนไลน์ 📚</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-  <style>
-    /* ═══════════════════════════════════════
-       VARIABLES & RESET
-    ═══════════════════════════════════════ */
-    :root {
-      --navy:   #0d1b3e;
-      --blue:   #1a3a8f;
-      --mid:    #2563eb;
-      --sky:    #60a5fa;
-      --gold:   #f59e0b;
-      --light:  #f0f5ff;
-      --white:  #ffffff;
-      --text:   #1e293b;
-      --muted:  #64748b;
-      --card-bg:#ffffff;
-      --shadow: 0 4px 24px rgba(13,27,62,.10);
-      --radius: 16px;
-      --nav-h:  68px;
-      --ease:   cubic-bezier(.4,0,.2,1);
-    }
-
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
-    html { scroll-behavior:smooth; }
-
-    body {
-      font-family:'Noto Sans Lao', sans-serif;
-      background: var(--light);
-      color: var(--text);
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    /* ═══════════════════════════════════════
-       NAVBAR
-    ═══════════════════════════════════════ */
-    .navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--nav-h);
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(37,99,235,.12);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 clamp(16px, 5vw, 48px);
-      box-shadow: 0 2px 20px rgba(13,27,62,.07);
-      transition: box-shadow .3s var(--ease);
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
-    .nav-logo {
-      width: 42px; height: 42px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--blue), var(--sky));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; color: white; font-weight: 700;
-      box-shadow: 0 2px 12px rgba(37,99,235,.35);
-      flex-shrink: 0;
-    }
-
-    .nav-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      color: var(--navy);
-      font-weight: 700;
-      letter-spacing: .3px;
-      white-space: nowrap;
-    }
-
-    /* Desktop menu */
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: .95rem;
-      font-weight: 600;
-      padding: 8px 18px;
-      border-radius: 50px;
-      transition: all .25s var(--ease);
-      white-space: nowrap;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      background: var(--blue);
-      color: var(--white);
-    }
-
-    /* Hamburger button */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 44px; height: 44px;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      border-radius: 10px;
-      gap: 5px;
-      padding: 6px;
-      transition: background .2s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .hamburger:hover { background: var(--light); }
-
-    .hamburger span {
-      display: block;
-      width: 24px; height: 2.5px;
-      background: var(--navy);
-      border-radius: 3px;
-      transition: all .35s var(--ease);
-      transform-origin: center;
-    }
-
-    /* Open state */
-    .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
-
-    /* Mobile drawer */
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: var(--nav-h);
-      left: 0; right: 0;
-      background: rgba(255,255,255,.97);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(37,99,235,.1);
-      padding: 16px 24px 24px;
-      z-index: 9998;
-      transform: translateY(-12px);
-      opacity: 0;
-      pointer-events: none;
-      transition: all .3s var(--ease);
-      box-shadow: 0 16px 40px rgba(13,27,62,.12);
-    }
-
-    .mobile-menu.open {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-    }
-
-    .mobile-menu ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .mobile-menu ul li a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: var(--text);
-      font-size: 1.05rem;
-      font-weight: 600;
-      padding: 14px 18px;
-      border-radius: 12px;
-      transition: all .2s var(--ease);
-    }
-
-    .mobile-menu ul li a:hover {
-      background: var(--light);
-      color: var(--blue);
-    }
-
-    .mobile-menu ul li a .menu-icon {
-      font-size: 1.2rem;
-      width: 28px;
-      text-align: center;
-    }
-
-    /* Overlay */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(13,27,62,.3);
-      backdrop-filter: blur(2px);
-      z-index: 9990;
-      opacity: 0;
-      transition: opacity .3s;
-    }
-
-    .overlay.open { opacity: 1; }
-
-    /* ═══════════════════════════════════════
-       HEADER / HERO
-    ═══════════════════════════════════════ */
-    .hero {
-      min-height: 100vh;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,.18) 0%, transparent 70%),
-        linear-gradient(160deg, var(--navy) 0%, #0f2460 50%, #162d6b 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: calc(var(--nav-h) + 40px) 24px 60px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Floating blobs */
-    .hero::before, .hero::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      pointer-events: none;
-    }
-
-    .hero::before {
-      width: 400px; height: 400px;
-      background: rgba(37,99,235,.25);
-      top: -80px; right: -80px;
-      animation: float1 8s ease-in-out infinite;
-    }
-
-    .hero::after {
-      width: 300px; height: 300px;
-      background: rgba(96,165,250,.15);
-      bottom: 40px; left: -60px;
-      animation: float2 10s ease-in-out infinite;
-    }
-
-    @keyframes float1 {
-      0%,100% { transform: translate(0,0) scale(1); }
-      50% { transform: translate(30px, 20px) scale(1.08); }
-    }
-
-    @keyframes float2 {
-      0%,100% { transform: translate(0,0) scale(1); }
-      50% { transform: translate(-20px, -30px) scale(1.05); }
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(245,158,11,.15);
-      border: 1px solid rgba(245,158,11,.4);
-      color: var(--gold);
-      font-size: .8rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 6px 16px;
-      border-radius: 50px;
-      margin-bottom: 28px;
-      animation: fadeUp .6s var(--ease) both;
-    }
-
-    .hero-avatar {
-      width: 110px; height: 110px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #60a5fa, #2563eb, #1a3a8f);
-      border: 4px solid rgba(255,255,255,.2);
-      margin: 0 auto 24px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.8rem;
-      box-shadow: 0 0 0 8px rgba(37,99,235,.15), 0 16px 40px rgba(0,0,0,.3);
-      animation: fadeUp .7s var(--ease) .1s both;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      color: var(--white);
-      margin-bottom: 14px;
-      animation: fadeUp .7s var(--ease) .15s both;
-      position: relative; z-index: 1;
-    }
-
-    .hero p {
-      font-size: clamp(.95rem, 2.5vw, 1.15rem);
-      color: rgba(255,255,255,.65);
-      max-width: 520px;
-      margin: 0 auto 36px;
-      animation: fadeUp .7s var(--ease) .2s both;
-      position: relative; z-index: 1;
-    }
-
-    .hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--gold);
-      color: var(--navy);
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 14px 32px;
-      border-radius: 50px;
-      text-decoration: none;
-      box-shadow: 0 8px 24px rgba(245,158,11,.35);
-      transition: all .25s var(--ease);
-      animation: fadeUp .7s var(--ease) .25s both;
-      position: relative; z-index: 1;
-    }
-
-    .hero-cta:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 32px rgba(245,158,11,.45);
-    }
-
-    /* Marquee strip */
-    .marquee-strip {
-      background: linear-gradient(90deg, var(--blue), var(--mid));
-      color: white;
-      padding: 12px 0;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .marquee-inner {
-      display: inline-block;
-      animation: marquee 20s linear infinite;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-
-    .marquee-sep {
-      display: inline-block;
-      margin: 0 32px;
-      opacity: .5;
-    }
-
-    @keyframes marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* ═══════════════════════════════════════
-       LAYOUT
-    ═══════════════════════════════════════ */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 clamp(16px, 4vw, 40px);
-    }
-
-    .section {
-      padding: 72px 0;
-    }
-
-    .section-header {
-      margin-bottom: 44px;
-    }
-
-    .section-label {
-      font-size: .75rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--mid);
-      margin-bottom: 10px;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      color: var(--navy);
-      line-height: 1.2;
-    }
-
-    .section-line {
-      width: 48px; height: 4px;
-      background: linear-gradient(90deg, var(--mid), var(--sky));
-      border-radius: 2px;
-      margin-top: 14px;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 32px;
-      align-items: start;
-    }
-
-    @media (max-width: 960px) {
-      .main-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ═══════════════════════════════════════
-       CARDS
-    ═══════════════════════════════════════ */
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(37,99,235,.07);
-      transition: box-shadow .3s var(--ease), transform .3s var(--ease);
-    }
-
-    .card:hover {
-      box-shadow: 0 8px 40px rgba(13,27,62,.13);
-      transform: translateY(-2px);
-    }
-
-    .card-heading {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--navy);
-      border-bottom: 2px solid var(--light);
-      padding-bottom: 14px;
-      margin-bottom: 20px;
-    }
-
-    .card-icon {
-      font-size: 1.4rem;
-      flex-shrink: 0;
-    }
-
-    /* ═══════════════════════════════════════
-       PRODUCT GRID
-    ═══════════════════════════════════════ */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 16px;
-    }
-
-    .product-item {
-      background: var(--light);
-      border: 1.5px solid rgba(37,99,235,.1);
-      border-radius: 12px;
-      padding: 20px 16px;
-      text-align: center;
-      transition: all .3s var(--ease);
-      cursor: default;
-    }
-
-    .product-item:hover {
-      background: var(--blue);
-      border-color: var(--blue);
-      transform: translateY(-6px);
-      box-shadow: 0 12px 28px rgba(37,99,235,.3);
-    }
-
-    .product-item:hover * { color: white !important; }
-
-    .product-item .pi-emoji {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .product-item h4 {
-      font-size: .95rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-
-    .product-item p {
-      font-size: .8rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    /* ═══════════════════════════════════════
-       ENTERTAINMENT
-    ═══════════════════════════════════════ */
-    .ent-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 480px) { .ent-grid { grid-template-columns: 1fr; } }
-
-    .ent-item {
-      border-radius: 12px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: transform .3s var(--ease);
-    }
-
-    .ent-item:hover { transform: translateY(-4px); }
-
-    .ent-item.red { background: linear-gradient(135deg, #fff5f5, #ffe4e4); border: 1.5px solid #fca5a5; }
-    .ent-item.yellow { background: linear-gradient(135deg, #fffbeb, #fef3c7); border: 1.5px solid #fcd34d; }
-
-    .ent-item strong { font-size: 1rem; color: var(--navy); }
-    .ent-item p { font-size: .85rem; color: var(--muted); }
-
-    /* ═══════════════════════════════════════
-       APP LIST
-    ═══════════════════════════════════════ */
-    .app-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .app-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      background: var(--light);
-      padding: 16px;
-      border-radius: 12px;
-      border: 1.5px solid rgba(37,99,235,.08);
-      transition: all .25s var(--ease);
-    }
-
-    .app-list li:hover {
-      border-color: var(--sky);
-      background: rgba(96,165,250,.07);
-    }
-
-    .app-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: var(--mid);
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
-
-    .app-list li strong { color: var(--blue); }
-
-    /* ═══════════════════════════════════════
-       NEWS
-    ═══════════════════════════════════════ */
-    .news-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .news-item {
-      background: var(--light);
-      border-radius: 12px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      border: 1.5px solid rgba(37,99,235,.08);
-      transition: all .25s var(--ease);
-    }
-
-    .news-item:hover {
-      border-color: var(--sky);
-      transform: translateX(4px);
-    }
-
-    .news-tag {
-      display: inline-block;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 50px;
-      width: fit-content;
-    }
-
-    .news-tag.blue { background: var(--blue); color: white; }
-    .news-tag.green { background: #059669; color: white; }
-
-    .news-item h4 { font-size: .95rem; color: var(--navy); line-height: 1.5; }
-
-    /* ═══════════════════════════════════════
-       SIDEBAR – OWNER INFO
-    ═══════════════════════════════════════ */
-    .owner-card {
-      background: linear-gradient(135deg, var(--navy), #162d6b);
-      border-radius: var(--radius);
-      padding: 30px;
-      color: white;
-      box-shadow: 0 8px 32px rgba(13,27,62,.25);
-      position: sticky;
-      top: calc(var(--nav-h) + 20px);
-    }
-
-    .owner-avatar {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--sky), var(--mid));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem;
-      margin: 0 auto 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.25);
-    }
-
-    .owner-card h2 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 6px;
-    }
-
-    .owner-card > p {
-      font-size: .85rem;
-      color: rgba(255,255,255,.65);
-      text-align: center;
-      margin-bottom: 22px;
-      line-height: 1.6;
-    }
-
-    .divider {
-      height: 1px;
-      background: rgba(255,255,255,.12);
-      margin: 18px 0;
-    }
-
-    .contact-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .contact-icon {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: rgba(255,255,255,.12);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .contact-label {
-      font-size: .72rem;
-      color: rgba(255,255,255,.5);
-      margin-bottom: 2px;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-    }
-
-    .contact-val {
-      font-size: .88rem;
-      color: white;
-      font-weight: 600;
-      word-break: break-all;
-    }
-
-    .social-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .social-btn {
-      flex: 1;
-      padding: 10px;
-      border-radius: 10px;
-      background: rgba(255,255,255,.1);
-      color: white;
-      text-align: center;
-      font-size: .8rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,.15);
-      transition: background .2s;
-    }
-
-    .social-btn:hover { background: rgba(255,255,255,.2); }
-
-    /* ═══════════════════════════════════════
-       FOOTER
-    ═══════════════════════════════════════ */
-    footer {
-      background: var(--navy);
-      color: rgba(255,255,255,.55);
-      text-align: center;
-      padding: 28px 24px;
-      font-size: .85rem;
-      border-top: 1px solid rgba(255,255,255,.06);
-    }
-
-    footer strong { color: rgba(255,255,255,.85); }
-
-    /* ═══════════════════════════════════════
-       ANIMATIONS
-    ═══════════════════════════════════════ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity .6s var(--ease), transform .6s var(--ease);
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ═══════════════════════════════════════
-       RESPONSIVE BREAKPOINTS
-    ═══════════════════════════════════════ */
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
-      .mobile-menu { display: block; }
-    }
-
-    @media (min-width: 769px) {
-      .mobile-menu { display: none !important; }
-      .overlay { display: none !important; }
-    }
-
-    @media (max-width: 520px) {
-      .product-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 360px) {
-      .product-grid { grid-template-columns: 1fr; }
-    }
-
-    /* Scroll-to-top */
-    .scroll-top {
-      position: fixed;
-      bottom: 28px; right: 24px;
-      width: 46px; height: 46px;
-      border-radius: 50%;
-      background: var(--blue);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1.2rem;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 16px rgba(37,99,235,.35);
-      opacity: 0; pointer-events: none;
-      transform: translateY(10px);
-      transition: all .3s var(--ease);
-      z-index: 500;
-    }
-
-    .scroll-top.show {
-      opacity: 1; pointer-events: all;
-      transform: translateY(0);
-    }
-
-    .scroll-top:hover { background: var(--navy); transform: translateY(-3px); }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Mitr:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
 
-<!-- ══════════════════════════════
-     NAVBAR
-══════════════════════════════ -->
-<nav class="navbar" id="navbar">
-  <a class="nav-brand" href="#top">
-    <div class="nav-logo">S</div>
-    <span class="nav-title">Soukchai & Buachan</span>
-  </a>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">📚</span>
+        <span class="logo-text">ห้องเรียนออนไลน์</span>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link active">หน้าหลัก</a>
+        <a href="#subjects" class="nav-link">วิชาเรียน</a>
+        <a href="#how-to" class="nav-link">วิธีใช้งาน</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="เมนู">☰</button>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="index.html" class="nav-link">หน้าหลัก</a>
+      <a href="#subjects" class="nav-link">วิชาเรียน</a>
+      <a href="#how-to" class="nav-link">วิธีใช้งาน</a>
+    </nav>
+  </header>
 
-  <ul class="nav-links">
-    <li><a href="#products" class="nav-link">🛒 ສິນຄ້າ</a></li>
-    <li><a href="#entertainment" class="nav-link">🎮 ຄວາມບັນເທິງ</a></li>
-    <li><a href="#apps" class="nav-link">📱 ແອັບ</a></li>
-    <li><a href="#news" class="nav-link">📰 ຂ່າວ</a></li>
-    <li><a href="#contact" class="nav-link">👤 ຕິດຕໍ່</a></li>
-  </ul>
-
-  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
-  <ul>
-    <li><a href="#products" class="mob-link"><span class="menu-icon">🛒</span> ສິນຄ້າຍອດນິຍົມ</a></li>
-    <li><a href="#entertainment" class="mob-link"><span class="menu-icon">🎮</span> ຄວາມບັນເທິງ & ເກມ</a></li>
-    <li><a href="#apps" class="mob-link"><span class="menu-icon">📱</span> ແອັບດັງໃນລາວ</a></li>
-    <li><a href="#news" class="mob-link"><span class="menu-icon">📰</span> ຂ່າວສານ</a></li>
-    <li><a href="#contact" class="mob-link"><span class="menu-icon">👤</span> ຂໍ້ມູນຕິດຕໍ່</a></li>
-  </ul>
-</div>
-
-<!-- Overlay -->
-<div class="overlay" id="overlay"></div>
-
-<!-- ══════════════════════════════
-     HERO
-══════════════════════════════ -->
-<header class="hero" id="top">
-  <div class="hero-badge">✦ ຍິນດີຕ້ອນຮັບ Welcome</div>
-  <div class="hero-avatar">🌟</div>
-  <h1>Soukchai & Buachan</h1>
-  <p>ພື້ນທີ່ຂອງຄວາມຮູ້, ສິນຄ້າ ແລະ ຄວາມບັນເທິງ ສໍາລັບທຸກໆທ່ານ</p>
-  <a href="#products" class="hero-cta">ເລີ່ມຕົ້ນເລີຍ →</a>
-</header>
-
-<!-- Marquee -->
-<div class="marquee-strip" aria-hidden="true">
-  <div class="marquee-inner">
-    HELLO WELCOME TO WEBSITE <span class="marquee-sep">✦</span>
-    ສິນຄ້າ IT &amp; Gadget <span class="marquee-sep">✦</span>
-    ຄວາມບັນເທິງ &amp; ເກມ <span class="marquee-sep">✦</span>
-    ແອັບດັງໃນລາວ <span class="marquee-sep">✦</span>
-    ຂ່າວສານທົ່ວໄປ <span class="marquee-sep">✦</span>
-    HELLO WELCOME TO WEBSITE <span class="marquee-sep">✦</span>
-    ສິນຄ້າ IT &amp; Gadget <span class="marquee-sep">✦</span>
-    ຄວາມບັນເທິງ &amp; ເກມ <span class="marquee-sep">✦</span>
-    ແອັບດັງໃນລາວ <span class="marquee-sep">✦</span>
-    ຂ່າວສານທົ່ວໄປ <span class="marquee-sep">✦</span>
-  </div>
-</div>
-
-<!-- ══════════════════════════════
-     MAIN CONTENT
-══════════════════════════════ -->
-<div class="container">
-  <section class="section">
-    <div class="main-grid">
-
-      <!-- LEFT COLUMN -->
-      <div>
-
-        <!-- Products -->
-        <div id="products" class="card fade-in">
-          <div class="card-heading">
-            <span class="card-icon">🛒</span>
-            ສິນຄ້າຍອດນິຍົມ
-          </div>
-          <div class="product-grid">
-            <div class="product-item">
-              <span class="pi-emoji">💻</span>
-              <h4>ສິນຄ້າ IT & Gadget</h4>
-              <p>ອຸປະກອນເສີມມືຖື ແລະ ຄອມພິວເຕີຄຸນນະພາບສູງ</p>
-            </div>
-            <div class="product-item">
-              <span class="pi-emoji">👗</span>
-              <h4>ເສື້ອຜ້າແຟຊັ່ນ</h4>
-              <p>ເສື້ອຜ້າໄວລຸ້ນ ທັນສະໄໝ ນໍາເຂົ້າຈາກຕ່າງປະເທດ</p>
-            </div>
-            <div class="product-item">
-              <span class="pi-emoji">🧃</span>
-              <h4>ເຄື່ອງດື່ມ & ຂະໜົມ</h4>
-              <p>ເຄື່ອງດື່ມສຸດເຢັນຊື່ນໃຈ ແລະ ເຂົ້າໜົມແຊບໆ</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Entertainment -->
-        <div id="entertainment" class="card fade-in">
-          <div class="card-heading">
-            <span class="card-icon">🎮</span>
-            ຄວາມບັນເທິງ ແລະ ເກມ
-          </div>
-          <p style="color:var(--muted);font-size:.9rem;margin-bottom:18px;">
-            ລວມຄວາມບັນເທິງທຸກຮູບແບບ ບໍ່ວ່າຈະເປັນການແນະນໍາເກມ, ເພງດັງ ແລະ ວິດີໂອທີ່ກໍາລັງເປັນກະແສ.
-          </p>
-          <div class="ent-grid">
-            <div class="ent-item red">
-              <strong>🕹️ ເກມອອນລາຍສຸດຮິດ</strong>
-              <p>ແນະນໍາເຕັກນິກການຫຼິ້ນ ແລະ ການເຕີມເກມສຸດຄຸ້ມ</p>
-            </div>
-            <div class="ent-item yellow">
-              <strong>🎵 ຟັງເພງ & ເບິ່ງໜັງ</strong>
-              <p>ຣີວິວໜັງໃໝ່ ແລະ ເພງທີ່ກໍາລັງມາແຮງໃນຕອນນີ້</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Apps -->
-        <div id="apps" class="card fade-in">
-          <div class="card-heading">
-            <span class="card-icon">📱</span>
-            ແອັບດັງໃນລາວ
-          </div>
-          <p style="color:var(--muted);font-size:.9rem;margin-bottom:18px;">
-            ຮວບຮວມເອົາແອັບທີ່ຄົນລາວນິຍົມໃຊ້ຫຼາຍທີ່ສຸດໃນຍຸກປັດຈຸບັນ.
-          </p>
-          <ul class="app-list">
-            <li>
-              <span class="app-dot"></span>
-              <div>
-                <strong>BCELOne</strong>
-                <p style="font-size:.85rem;color:var(--muted);">ແອັບທະນາຄານອັນດັບໜຶ່ງໃນລາວ ໃຊ້ງ່າຍ ຈ່າຍສະດວກ.</p>
-              </div>
-            </li>
-            <li>
-              <span class="app-dot"></span>
-              <div>
-                <strong>Loca</strong>
-                <p style="font-size:.85rem;color:var(--muted);">ແອັບເອີ້ນລົດໂດຍສານ ແລະ ບໍລິການຂົນສົ່ງທີ່ທັນສະໄໝ.</p>
-              </div>
-            </li>
-            <li>
-              <span class="app-dot"></span>
-              <div>
-                <strong>Sabaidee App</strong>
-                <p style="font-size:.85rem;color:var(--muted);">ແອັບບໍລິການ ແລະ ຂໍ້ມູນຂ່າວສານຕ່າງໆ.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- News -->
-        <div id="news" class="card fade-in">
-          <div class="card-heading">
-            <span class="card-icon">📰</span>
-            ຂ່າວສານທົ່ວໄປ
-          </div>
-          <div class="news-list">
-            <div class="news-item">
-              <span class="news-tag blue">ຂ່າວໄອທີ</span>
-              <h4>ເຕັກໂນໂລຊີໃນລາວກ້າວໄກ ເປີດຕົວລະບົບການຊໍາລະເງິນແບບໃໝ່</h4>
-            </div>
-            <div class="news-item">
-              <span class="news-tag green">ຂ່າວທົ່ວໄປ</span>
-              <h4>ກິດຈະກໍາດີໆ ສໍາລັບໄວລຸ້ນຍຸກດິຈິຕອນ ທີ່ກໍາລັງຈະຈັດຂຶ້ນໄວໆນີ້</h4>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- end left -->
-
-      <!-- SIDEBAR -->
-      <div id="contact">
-        <div class="owner-card fade-in">
-          <div class="owner-avatar">👤</div>
-          <h2>Soukchai & Buachan</h2>
-          <p>ຜູ້ພັດທະນາ ແລະ ສ້າງສັນເນື້ອຫາ ຍິນດີຕ້ອນຮັບທຸກໆທ່ານ ເຂົ້າສູ່ພື້ນທີ່ແຫ່ງຄວາມຮູ້ ແລະ ຄວາມບັນເທິງ.</p>
-
-          <div class="divider"></div>
-
-          <div class="contact-row">
-            <div class="contact-icon">💬</div>
-            <div>
-              <div class="contact-label">WhatsApp</div>
-              <div class="contact-val">02095038956<br/>2091679132</div>
-            </div>
-          </div>
-
-          <div class="contact-row">
-            <div class="contact-icon">📧</div>
-            <div>
-              <div class="contact-label">Email</div>
-              <div class="contact-val">soukchaiph@gmail.com</div>
-            </div>
-          </div>
-
-          <div class="social-row">
-            <a class="social-btn" href="mailto:soukchaiph@gmail.com">📧 Email</a>
-            <a class="social-btn" href="https://wa.me/02095038956">💬 Chat</a>
-          </div>
-        </div>
-      </div><!-- end sidebar -->
-
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">✨ เรียนฟรี ทุกที่ ทุกเวลา</div>
+      <h1 class="hero-title">เรียนรู้ได้<br/><span class="highlight">ทุกวิชา</span><br/>ในที่เดียว</h1>
+      <p class="hero-sub">รวมบทเรียน เอกสาร PDF และสื่อการเรียนรู้หลากหลายวิชา<br/>เข้าถึงได้ง่าย ไม่มีค่าใช้จ่าย</p>
+      <a href="#subjects" class="btn-primary">เริ่มเรียนเลย 🚀</a>
+    </div>
+    <div class="hero-visual">
+      <div class="float-card card-a">📐 คณิตศาสตร์</div>
+      <div class="float-card card-b">🔬 วิทยาศาสตร์</div>
+      <div class="float-card card-c">📖 ภาษาไทย</div>
+      <div class="float-card card-d">🌍 สังคมศึกษา</div>
     </div>
   </section>
-</div>
 
-<!-- ══════════════════════════════
-     FOOTER
-══════════════════════════════ -->
-<footer>
-  <p>&copy; 2026 <strong>Soukchai and Buachan</strong>. All Rights Reserved.</p>
-</footer>
+  <!-- STATS -->
+  <section class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-num" id="stat-subjects">0</span>
+      <span class="stat-label">วิชาเรียน</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num" id="stat-lessons">0</span>
+      <span class="stat-label">บทเรียน</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">เข้าถึงได้ฟรี</span>
+    </div>
+  </section>
 
-<!-- Scroll-to-top -->
-<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+  <!-- SUBJECTS SECTION -->
+  <section id="subjects" class="subjects-section">
+    <div class="section-header">
+      <div class="section-tag">📂 วิชาเรียนทั้งหมด</div>
+      <h2 class="section-title">เลือกวิชาที่ต้องการ</h2>
+      <p class="section-sub">คลิกที่วิชาเพื่อดูบทเรียนและเอกสารประกอบ</p>
+    </div>
 
-<!-- ══════════════════════════════
-     JAVASCRIPT
-══════════════════════════════ -->
-<script>
-  /* ─── Hamburger / mobile menu ─── */
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const overlay    = document.getElementById('overlay');
+    <!-- Search -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาวิชาหรือบทเรียน..." />
+    </div>
 
-  function openMenu() {
-    hamburger.classList.add('open');
-    hamburger.setAttribute('aria-expanded', 'true');
-    mobileMenu.classList.add('open');
-    overlay.style.display = 'block';
-    // force reflow then fade in
-    requestAnimationFrame(() => overlay.classList.add('open'));
-    document.body.style.overflow = 'hidden';
-  }
+    <!-- Subject Cards Grid — loaded from lessons.js -->
+    <div class="subjects-grid" id="subjectsGrid">
+      <!-- filled by JS -->
+    </div>
+  </section>
 
-  function closeMenu() {
-    hamburger.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
-    mobileMenu.classList.remove('open');
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-    // hide overlay after transition
-    overlay.addEventListener('transitionend', function hide() {
-      overlay.style.display = 'none';
-      overlay.removeEventListener('transitionend', hide);
-    });
-  }
+  <!-- HOW TO USE -->
+  <section id="how-to" class="howto-section">
+    <div class="section-header">
+      <div class="section-tag">💡 วิธีใช้งาน</div>
+      <h2 class="section-title">เริ่มต้นง่ายมาก</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-icon">📂</div>
+        <h3>เลือกวิชา</h3>
+        <p>เลือกวิชาที่ต้องการเรียนจากรายการวิชาทั้งหมด</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-icon">📄</div>
+        <h3>เลือกบทเรียน</h3>
+        <p>คลิกบทเรียนที่สนใจ ดูได้ทั้ง PDF และรูปภาพ</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-icon">📥</div>
+        <h3>ดาวน์โหลด</h3>
+        <p>ดาวน์โหลดเอกสารเก็บไว้อ่านแบบออฟไลน์ได้เลย</p>
+      </div>
+    </div>
+  </section>
 
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.contains('open') ? closeMenu() : openMenu();
-  });
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">📚 ห้องเรียนออนไลน์</div>
+      <p class="footer-text">สร้างด้วย ❤️ เพื่อการศึกษาที่เข้าถึงได้ทุกคน</p>
+      <p class="footer-copy">© 2024 ห้องเรียนออนไลน์ — เผยแพร่บน GitHub Pages</p>
+    </div>
+  </footer>
 
-  overlay.addEventListener('click', closeMenu);
+  <!-- LESSON MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="lessonModal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-header" id="modalHeader"></div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
 
-  // Close on mobile link click
-  document.querySelectorAll('.mob-link').forEach(link => {
-    link.addEventListener('click', closeMenu);
-  });
-
-  // Close on Escape key
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeMenu();
-  });
-
-  /* ─── Active nav link on scroll ─── */
-  const sections = document.querySelectorAll('[id]');
-  const navLinks = document.querySelectorAll('.nav-link');
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(l => l.classList.remove('active'));
-        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
-        if (active) active.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-40% 0px -50% 0px' });
-
-  sections.forEach(s => observer.observe(s));
-
-  /* ─── Fade-in on scroll ─── */
-  const fadeEls = document.querySelectorAll('.fade-in');
-  const fadeObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        fadeObs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  fadeEls.forEach(el => fadeObs.observe(el));
-
-  /* ─── Scroll-to-top ─── */
-  const scrollBtn = document.getElementById('scrollTop');
-
-  window.addEventListener('scroll', () => {
-    scrollBtn.classList.toggle('show', window.scrollY > 400);
-  }, { passive: true });
-
-  scrollBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-</script>
+  <script src="assets/lessons.js"></script>
+  <script src="assets/app.js"></script>
 </body>
 </html>
