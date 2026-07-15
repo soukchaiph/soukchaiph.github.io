@@ -1,142 +1,360 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ห้องเรียนออนไลน์ 📚</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Mitr:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30s High-Speed Option Signal Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #080b0e;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .glow-green { text-shadow: 0 0 15px rgba(0, 240, 140, 0.6); }
+        .glow-red { text-shadow: 0 0 15px rgba(255, 60, 80, 0.6); }
+        .glow-yellow { text-shadow: 0 0 15px rgba(255, 200, 0, 0.6); }
+    </style>
 </head>
-<body>
+<body class="text-[#eaecef] min-h-screen flex flex-col justify-between">
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <span class="logo-icon">📚</span>
-        <span class="logo-text">ห้องเรียนออนไลน์</span>
-      </div>
-      <nav class="main-nav">
-        <a href="index.html" class="nav-link active">หน้าหลัก</a>
-        <a href="#subjects" class="nav-link">วิชาเรียน</a>
-        <a href="#how-to" class="nav-link">วิธีใช้งาน</a>
-      </nav>
-      <button class="menu-toggle" id="menuToggle" aria-label="เมนู">☰</button>
-    </div>
-    <nav class="mobile-nav" id="mobileNav">
-      <a href="index.html" class="nav-link">หน้าหลัก</a>
-      <a href="#subjects" class="nav-link">วิชาเรียน</a>
-      <a href="#how-to" class="nav-link">วิธีใช้งาน</a>
-    </nav>
-  </header>
+    <header class="border-b border-[#181d24] bg-[#0e1318] px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black text-yellow-400 tracking-wider">AI <span class="text-white">SIGNAL</span> BOT</span>
+            <span class="text-xs bg-[#1f2630] text-yellow-400 px-3 py-1 rounded-full border border-yellow-500/30 font-bold animate-pulse">30-SEC OPTIMIZED</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-400">สถานะ Binance WS:</span>
+            <span id="ws-status" class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+        </div>
+    </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-blobs">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-      <div class="blob blob-3"></div>
-    </div>
-    <div class="hero-content">
-      <div class="hero-badge">✨ เรียนฟรี ทุกที่ ทุกเวลา</div>
-      <h1 class="hero-title">เรียนรู้ได้<br/><span class="highlight">ทุกวิชา</span><br/>ในที่เดียว</h1>
-      <p class="hero-sub">รวมบทเรียน เอกสาร PDF และสื่อการเรียนรู้หลากหลายวิชา<br/>เข้าถึงได้ง่าย ไม่มีค่าใช้จ่าย</p>
-      <a href="#subjects" class="btn-primary">เริ่มเรียนเลย 🚀</a>
-    </div>
-    <div class="hero-visual">
-      <div class="float-card card-a">📐 คณิตศาสตร์</div>
-      <div class="float-card card-b">🔬 วิทยาศาสตร์</div>
-      <div class="float-card card-c">📖 ภาษาไทย</div>
-      <div class="float-card card-d">🌍 สังคมศึกษา</div>
-    </div>
-  </section>
+    <main class="flex-grow p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <section class="lg:col-span-4 bg-[#0e1318] border border-[#181d24] rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+                <h2 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-4 border-b border-gray-800 pb-2">🤖 AI Decision Engine</h2>
+                
+                <div id="signal-box" class="bg-[#141a22] rounded-2xl p-8 text-center border border-gray-800 transition-all duration-300 flex flex-col justify-center items-center h-64">
+                    <span class="text-xs text-gray-500 uppercase tracking-widest mb-2 font-bold">สัญญาณวิเคราะห์ ณ ปัจจุบัน</span>
+                    <div id="signal-text" class="text-5xl font-black text-gray-400 tracking-wide glow-yellow mb-2">WAITING</div>
+                    <div id="signal-desc" class="text-xs text-gray-400 max-w-xs">กำลังเก็บข้อมูลราคาเพื่อคำนวณสัญญาณที่แม่นยำ...</div>
+                </div>
 
-  <!-- STATS -->
-  <section class="stats-bar">
-    <div class="stat-item">
-      <span class="stat-num" id="stat-subjects">0</span>
-      <span class="stat-label">วิชาเรียน</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-num" id="stat-lessons">0</span>
-      <span class="stat-label">บทเรียน</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-num">∞</span>
-      <span class="stat-label">เข้าถึงได้ฟรี</span>
-    </div>
-  </section>
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <div class="bg-[#141a22] p-4 rounded-xl border border-gray-800 text-center">
+                        <span class="block text-xs text-gray-400 mb-1 font-semibold">Stochastic %K</span>
+                        <span id="stoch-k" class="text-xl font-bold text-gray-300">--.-</span>
+                    </div>
+                    <div class="bg-[#141a22] p-4 rounded-xl border border-gray-800 text-center">
+                        <span class="block text-xs text-gray-400 mb-1 font-semibold">Stochastic %D</span>
+                        <span id="stoch-d" class="text-xl font-bold text-gray-300">--.-</span>
+                    </div>
+                </div>
+            </div>
 
-  <!-- SUBJECTS SECTION -->
-  <section id="subjects" class="subjects-section">
-    <div class="section-header">
-      <div class="section-tag">📂 วิชาเรียนทั้งหมด</div>
-      <h2 class="section-title">เลือกวิชาที่ต้องการ</h2>
-      <p class="section-sub">คลิกที่วิชาเพื่อดูบทเรียนและเอกสารประกอบ</p>
-    </div>
+            <div class="mt-6 bg-[#141a22] p-4 rounded-xl border border-gray-800">
+                <div class="flex justify-between items-center text-xs mb-3">
+                    <span class="font-bold text-gray-400 uppercase">สถิติความแม่นยำของบอท</span>
+                    <button onclick="resetStats()" class="text-yellow-400 hover:text-yellow-300 text-[10px]">รีเซ็ตสถิติ</button>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-[#0e1318] p-2 rounded">
+                        <span class="block text-[10px] text-gray-500">สัญญาณที่ออก</span>
+                        <span id="total-signals" class="text-sm font-bold text-white">0</span>
+                    </div>
+                    <div class="bg-[#0e1318] p-2 rounded">
+                        <span class="block text-[10px] text-gray-500">คาดการณ์ถูก</span>
+                        <span id="win-signals" class="text-sm font-bold text-[#00c076]">0</span>
+                    </div>
+                    <div class="bg-[#0e1318] p-2 rounded">
+                        <span class="block text-[10px] text-gray-500">อัตราแม่นยำ</span>
+                        <span id="signal-winrate" class="text-sm font-bold text-yellow-400">0%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Search -->
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาวิชาหรือบทเรียน..." />
-    </div>
+        <section class="lg:col-span-8 bg-[#0e1318] border border-[#181d24] rounded-2xl p-6 flex flex-col justify-between">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-4 mb-4">
+                <div>
+                    <h1 class="text-2xl font-black">BTC / USDT</h1>
+                    <span class="text-xs text-gray-500 font-semibold">เรียลไทม์ ฟีดตรงจาก Binance</span>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-gray-400 uppercase font-semibold">ราคาปัจจุบัน</span>
+                    <div id="live-price" class="text-3xl font-black tracking-tight text-white">Loading...</div>
+                </div>
+            </div>
 
-    <!-- Subject Cards Grid — loaded from lessons.js -->
-    <div class="subjects-grid" id="subjectsGrid">
-      <!-- filled by JS -->
-    </div>
-  </section>
+            <div class="flex-grow w-full relative min-h-[300px] mb-4 bg-[#10151c]/50 rounded-xl p-4 border border-gray-800/40">
+                <canvas id="liveChart" class="w-full h-full"></canvas>
+            </div>
 
-  <!-- HOW TO USE -->
-  <section id="how-to" class="howto-section">
-    <div class="section-header">
-      <div class="section-tag">💡 วิธีใช้งาน</div>
-      <h2 class="section-title">เริ่มต้นง่ายมาก</h2>
-    </div>
-    <div class="steps-grid">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-icon">📂</div>
-        <h3>เลือกวิชา</h3>
-        <p>เลือกวิชาที่ต้องการเรียนจากรายการวิชาทั้งหมด</p>
-      </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-icon">📄</div>
-        <h3>เลือกบทเรียน</h3>
-        <p>คลิกบทเรียนที่สนใจ ดูได้ทั้ง PDF และรูปภาพ</p>
-      </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-icon">📥</div>
-        <h3>ดาวน์โหลด</h3>
-        <p>ดาวน์โหลดเอกสารเก็บไว้อ่านแบบออฟไลน์ได้เลย</p>
-      </div>
-    </div>
-  </section>
+            <div>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">ประวัติสัญญาณ 5 ครั้งล่าสุด</h3>
+                <div id="signal-history" class="grid grid-cols-5 gap-2">
+                    </div>
+            </div>
+        </section>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-logo">📚 ห้องเรียนออนไลน์</div>
-      <p class="footer-text">สร้างด้วย ❤️ เพื่อการศึกษาที่เข้าถึงได้ทุกคน</p>
-      <p class="footer-copy">© 2024 ห้องเรียนออนไลน์ — เผยแพร่บน GitHub Pages</p>
-    </div>
-  </footer>
+    </main>
 
-  <!-- LESSON MODAL -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="lessonModal">
-      <button class="modal-close" id="modalClose">✕</button>
-      <div class="modal-header" id="modalHeader"></div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
-  </div>
+    <footer class="bg-[#0e1318] border-t border-[#181d24] px-6 py-3 text-center text-xs text-gray-500">
+        <p>สัญญาณนี้คำนวณผ่านโมเดลคณิตศาสตร์ Stochastic (14, 3, 3) ในระดับมิลลิวินาที | ใช้เป็นแนวทางและทางสถิติเท่านั้น</p>
+    </footer>
 
-  <script src="assets/lessons.js"></script>
-  <script src="assets/app.js"></script>
+    <script>
+        let priceHistory = [];
+        const maxDataPoints = 60; // แสดงข้อมูล 60 วินาทีบนกราฟ
+        
+        // ตัวแปรเก็บสถิติบอท
+        let totalSignalsCount = 0;
+        let winSignalsCount = 0;
+        let activeSignal = null;
+        let activeSignalPrice = 0;
+        let activeSignalTime = 0;
+
+        // ค่าสำหรับการคำนวณ Stochastic (14, 3, 3)
+        const stochPeriod = 14;
+        const smoothK = 3;
+        const smoothD = 3;
+        let rawKHistory = [];
+        let kHistory = [];
+
+        // Setup Chart.js
+        const ctx = document.getElementById('liveChart').getContext('2d');
+        const liveChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(maxDataPoints).fill(''),
+                datasets: [{
+                    label: 'BTC/USDT',
+                    data: [],
+                    borderColor: '#f5a623',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.15,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { display: false } },
+                    y: { grid: { color: '#181d24' }, ticks: { color: '#8c96a3', font: { size: 10 } } }
+                }
+            }
+        });
+
+        // -- WEBSOCKET TO BINANCE --
+        const wsUrl = "wss://stream.binance.com:9443/ws/btcusdt@ticker";
+        let ws = new WebSocket(wsUrl);
+        const priceEl = document.getElementById("live-price");
+        const statusEl = document.getElementById("ws-status");
+
+        ws.onopen = () => {
+            statusEl.className = "w-3 h-3 rounded-full bg-green-500 animate-pulse";
+        };
+
+        ws.onclose = () => {
+            statusEl.className = "w-3 h-3 rounded-full bg-red-500 animate-pulse";
+            setTimeout(() => { ws = new WebSocket(wsUrl); }, 5000);
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            const currentPrice = parseFloat(data.c);
+
+            priceEl.innerText = `$ ${currentPrice.toFixed(2)}`;
+            updateChartAndLogic(currentPrice);
+        };
+
+        function updateChartAndLogic(price) {
+            priceHistory.push(price);
+            if (priceHistory.length > maxDataPoints) {
+                priceHistory.shift();
+            }
+
+            // อัปเดตกราฟ
+            liveChart.data.datasets[0].data = priceHistory;
+            // ปรับสีเส้นกราฟตามแนวโน้มล่าสุด
+            if (priceHistory.length >= 2) {
+                const diff = price - priceHistory[priceHistory.length - 2];
+                liveChart.data.datasets[0].borderColor = diff >= 0 ? '#00c076' : '#ff3b30';
+            }
+            liveChart.update('none'); // อัปเดตแบบลื่นๆ ไม่ต้องสร้างอนิเมชั่นใหม่ทุกวินาที
+
+            // คำนวณสัญญาณบ่งชี้ทางเทคนิค
+            calculateIndicators();
+            checkSignalResult(price);
+        }
+
+        // -- MATHEMATICAL CALCULATIONS (STOCHASTIC) --
+        function calculateIndicators() {
+            if (priceHistory.length < stochPeriod) return;
+
+            // ค้นหาจุดสูงสุดและต่ำสุดย้อนหลังในรอบ 14 วินาที
+            const subArray = priceHistory.slice(-stochPeriod);
+            const highestHigh = Math.max(...subArray);
+            const lowestLow = Math.min(...subArray);
+            const currentClose = priceHistory[priceHistory.length - 1];
+
+            // 1. คำนวณดิบ %K
+            let rawK = 50; // เริ่มต้นกลางตารางถ้าช่วงราคาแคบมาก
+            if (highestHigh !== lowestLow) {
+                rawK = ((currentClose - lowestLow) / (highestHigh - lowestLow)) * 100;
+            }
+            rawKHistory.push(rawK);
+            if (rawKHistory.length > 20) rawKHistory.shift();
+
+            // 2. คำนวณ %K (Smooth 3)
+            if (rawKHistory.length >= smoothK) {
+                const sumK = rawKHistory.slice(-smoothK).reduce((a, b) => a + b, 0);
+                const smoothKVal = sumK / smoothK;
+                kHistory.push(smoothKVal);
+                if (kHistory.length > 20) kHistory.shift();
+
+                document.getElementById("stoch-k").innerText = smoothKVal.toFixed(1);
+            }
+
+            // 3. คำนวณ %D (Smooth 3 ของ %K)
+            if (kHistory.length >= smoothD) {
+                const sumD = kHistory.slice(-smoothD).reduce((a, b) => a + b, 0);
+                const smoothDVal = sumD / smoothD;
+
+                document.getElementById("stoch-d").innerText = smoothDVal.toFixed(1);
+
+                // ส่งค่าไปเช็คเพื่อส่งสัญญาณบอท
+                generateAIsignals(kHistory[kHistory.length - 1], smoothDVal);
+            }
+        }
+
+        // -- DECISION ENGINE (ใจและความรู้เต็มร้อย) --
+        function generateAIsignals(k, d) {
+            const signalBox = document.getElementById("signal-box");
+            const signalText = document.getElementById("signal-text");
+            const signalDesc = document.getElementById("signal-desc");
+
+            // ป้องกันการทับซ้อนของสัญญาณ (คูลดาวน์บอท 30 วินาทีเพื่อให้สัญญาณเดิมทำงานจบ)
+            if (activeSignal !== null && (Date.now() - activeSignalTime < 30000)) {
+                return; 
+            }
+
+            // 🟢 จุดเข้า CALL (ซื้อขึ้น): คาดหวังการกลับตัวขึ้น 
+            // เงื่อนไข: Stochastic %K และ %D อยู่โซน Oversold (< 25) และ %K ตัด %D ขึ้น
+            if (k < 25 && d < 25 && k > d && (k - d > 1.5)) {
+                triggerSignal("CALL", "บอทวิเคราะห์พฤติกรรมราคา ต่ำเกินไปแล้วและเริ่มมีแรงซื้อดันกลับ คาดหวังการพุ่งขึ้นระยะสั้น 30 วินาที");
+            } 
+            // 🔴 จุดเข้า PUT (ซื้อลง): คาดหวังการกลับตัวลง
+            // เงื่อนไข: Stochastic %K และ %D อยู่โซน Overbought (> 75) และ %K ตัด %D ลง
+            else if (k > 75 && d > 75 && k < d && (d - k > 1.5)) {
+                triggerSignal("PUT", "บอทวิเคราะห์พฤติกรรมราคา สูงเกินไปแล้วและเริ่มมีแรงขายกดตัวกลับ คาดหวังการย่อตัวระยะสั้น 30 วินาที");
+            }
+        }
+
+        function triggerSignal(type, description) {
+            const signalBox = document.getElementById("signal-box");
+            const signalText = document.getElementById("signal-text");
+            const signalDesc = document.getElementById("signal-desc");
+
+            activeSignal = type;
+            activeSignalPrice = priceHistory[priceHistory.length - 1];
+            activeSignalTime = Date.now();
+
+            if (type === "CALL") {
+                signalBox.className = "bg-emerald-950/40 rounded-2xl p-8 text-center border-2 border-[#00c076] transition-all duration-300 flex flex-col justify-center items-center h-64 glow-green animate-bounce";
+                signalText.className = "text-6xl font-black text-[#00c076] tracking-wide glow-green mb-2";
+                signalText.innerText = "🟩 CALL";
+                signalDesc.innerText = `${description} \n (ราคาอ้างอิงจุดเข้า: $${activeSignalPrice.toFixed(2)})`;
+            } else if (type === "PUT") {
+                signalBox.className = "bg-rose-950/40 rounded-2xl p-8 text-center border-2 border-[#ff3b30] transition-all duration-300 flex flex-col justify-center items-center h-64 glow-red animate-bounce";
+                signalText.className = "text-6xl font-black text-[#ff3b30] tracking-wide glow-red mb-2";
+                signalText.innerText = "🟥 PUT";
+                signalDesc.innerText = `${description} \n (ราคาอ้างอิงจุดเข้า: $${activeSignalPrice.toFixed(2)})`;
+            }
+
+            // บันทึกสถิติว่ามีสัญญาณออก
+            totalSignalsCount++;
+            document.getElementById("total-signals").innerText = totalSignalsCount;
+        }
+
+        // -- SYSTEM FOR CHECKING SIGNAL ACCURACY AFTER 30 SECONDS --
+        function checkSignalResult(currentPrice) {
+            if (activeSignal === null) return;
+
+            const timeElapsed = Date.now() - activeSignalTime;
+            
+            // รอจนครบ 30 วินาทีเพื่อตัดสินผล
+            if (timeElapsed >= 30000) {
+                let result = "LOSS";
+                if (activeSignal === "CALL" && currentPrice > activeSignalPrice) {
+                    result = "WIN";
+                } else if (activeSignal === "PUT" && currentPrice < activeSignalPrice) {
+                    result = "WIN";
+                }
+
+                if (result === "WIN") winSignalsCount++;
+                
+                // อัปเดตสถิติ
+                updateSignalStats();
+                
+                // บันทึกเข้าประวัติล่าสุด
+                addSignalToHistory(activeSignal, activeSignalPrice, result);
+
+                // รีเซ็ตสถานะหน้าจอเตรียมรับสัญญาณถัดไป
+                resetSignalBoxToWaiting();
+            }
+        }
+
+        function updateSignalStats() {
+            document.getElementById("win-signals").innerText = winSignalsCount;
+            const rate = totalSignalsCount > 0 ? ((winSignalsCount / totalSignalsCount) * 100).toFixed(0) : 0;
+            document.getElementById("signal-winrate").innerText = `${rate}%`;
+        }
+
+        function addSignalToHistory(type, entryPrice, result) {
+            const container = document.getElementById("signal-history");
+            const badges = container.querySelectorAll("div");
+            if (badges.length >= 5) {
+                container.removeChild(container.firstChild);
+            }
+
+            const item = document.createElement("div");
+            item.className = `p-3 rounded-xl border text-center text-xs font-bold transition duration-300 flex flex-col gap-1`;
+            
+            if (result === "WIN") {
+                item.className += " bg-emerald-950/30 border-[#00c076]/40 text-[#00c076]";
+                item.innerHTML = `<span>${type}</span><span class="text-[10px]">$${entryPrice.toFixed(0)}</span><span class="text-[9px] bg-emerald-500/20 px-1 py-0.5 rounded">SUCCESS</span>`;
+            } else {
+                item.className += " bg-rose-950/30 border-[#ff3b30]/40 text-[#ff3b30]";
+                item.innerHTML = `<span>${type}</span><span class="text-[10px]">$${entryPrice.toFixed(0)}</span><span class="text-[9px] bg-rose-500/20 px-1 py-0.5 rounded">FAILED</span>`;
+            }
+            container.appendChild(item);
+        }
+
+        function resetSignalBoxToWaiting() {
+            activeSignal = null;
+            const signalBox = document.getElementById("signal-box");
+            const signalText = document.getElementById("signal-text");
+            const signalDesc = document.getElementById("signal-desc");
+
+            signalBox.className = "bg-[#141a22] rounded-2xl p-8 text-center border border-gray-800 transition-all duration-300 flex flex-col justify-center items-center h-64";
+            signalText.className = "text-5xl font-black text-gray-400 tracking-wide glow-yellow mb-2";
+            signalText.innerText = "ANALYZING";
+            signalDesc.innerText = "ระบบกลับเข้าสู่โหมดวิเคราะห์เรียลไทม์... กำลังรอจุดเข้าตัดของ Stochastic ถัดไปอย่างมีวินัย";
+        }
+
+        function resetStats() {
+            totalSignalsCount = 0;
+            winSignalsCount = 0;
+            document.getElementById("total-signals").innerText = "0";
+            document.getElementById("win-signals").innerText = "0";
+            document.getElementById("signal-winrate").innerText = "0%";
+            document.getElementById("signal-history").innerHTML = '';
+        }
+    </script>
 </body>
 </html>
