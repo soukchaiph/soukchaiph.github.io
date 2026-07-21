@@ -1,782 +1,668 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="dark">
-<title>PULSE — BTC/USDT Live Market Read</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto 30s Binary Bot - Multi-Indicator & 24h History</title>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0e11;
+            --card-bg: #1e2329;
+            --text-color: #eaecef;
+            --accent-green: #0ecb81;
+            --accent-red: #f6465d;
+            --accent-yellow: #f0b90b;
+            --accent-blue: #3880ff;
+            --accent-purple: #9c27b0;
+            --border-color: #2b313a;
+        }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+        }
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          base: { DEFAULT: '#0b0e11', card: '#12161c' },
-          ink: '#eaecef',
-          bull: '#00c076',
-          bear: '#ff3b30',
-          amber: '#f0b90b',
-        },
-        fontFamily: {
-          display: ['"Space Grotesk"', 'sans-serif'],
-          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-        },
-      },
-    },
-  };
-</script>
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
 
-<style>
-  * { font-variant-numeric: tabular-nums; }
-  body {
-    background-color: #0b0e11;
-    background-image:
-      linear-gradient(rgba(234,236,239,0.028) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(234,236,239,0.028) 1px, transparent 1px);
-    background-size: 44px 44px;
-  }
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #262b33; border-radius: 4px; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
 
-  @keyframes flashGreen {
-    0%   { color: #00c076; text-shadow: 0 0 28px rgba(0,192,118,0.65); }
-    100% { color: #eaecef; text-shadow: 0 0 0 rgba(0,192,118,0); }
-  }
-  @keyframes flashRed {
-    0%   { color: #ff3b30; text-shadow: 0 0 28px rgba(255,59,48,0.65); }
-    100% { color: #eaecef; text-shadow: 0 0 0 rgba(255,59,48,0); }
-  }
-  .flash-up   { animation: flashGreen 0.7s ease-out; }
-  .flash-down { animation: flashRed 0.7s ease-out; }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .status-connected { background-color: rgba(14, 203, 129, 0.2); color: var(--accent-green); }
+        .status-disconnected { background-color: rgba(246, 70, 93, 0.2); color: var(--accent-red); }
 
-  @keyframes pulseDot { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
-  .pulse-dot { animation: pulseDot 1.6s ease-in-out infinite; }
+        .top-grid {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
 
-  :focus-visible { outline: 2px solid rgba(234,236,239,0.5); outline-offset: 2px; }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
 
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-</style>
+        #chart-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+
+        .price-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .timer-box {
+            font-size: 1rem;
+            color: var(--accent-yellow);
+            margin-top: 10px;
+            background: #14181d;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .signal-box {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 10px;
+            background: #2b313a;
+        }
+
+        .signal-buy { background-color: var(--accent-green); color: #000; }
+        .signal-sell { background-color: var(--accent-red); color: #fff; }
+        .signal-wait { background-color: #474d57; color: #848e9c; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: #14181d;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        .stat-item .val { font-size: 1.1rem; font-weight: bold; }
+
+        /* Indicators Dashboard Cards */
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .ind-card {
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-yellow);
+        }
+
+        .ind-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.85rem;
+            color: #848e9c;
+        }
+
+        .ind-card .val-main {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .ind-card .val-sub {
+            font-size: 0.75rem;
+            color: #848e9c;
+            margin-top: 4px;
+        }
+
+        .tf-select {
+            background: #2b313a;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .table-container {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        th { color: #848e9c; position: sticky; top: 0; background: var(--card-bg); }
+        .win { color: var(--accent-green); font-weight: bold; }
+        .loss { color: var(--accent-red); font-weight: bold; }
+        
+        .reset-btn {
+            background: #2b313a;
+            color: #848e9c;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .reset-btn:hover { color: #fff; background: var(--accent-red); }
+    </style>
 </head>
+<body>
 
-<body class="bg-base text-ink font-sans min-h-screen antialiased">
-
-  <header class="sticky top-0 z-40 backdrop-blur-md bg-base/85 border-b border-white/5 px-4 lg:px-6 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-2.5">
-      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-bull to-emerald-700 flex items-center justify-center font-display font-bold text-black text-sm">P</div>
-      <div class="leading-none">
-        <h1 class="font-display font-bold text-base tracking-tight">PULSE</h1>
-        <p class="text-[10px] text-gray-500 tracking-[0.15em] mt-0.5">LIVE MARKET READ</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
-      <span id="connection-dot" class="w-2 h-2 rounded-full bg-amber pulse-dot"></span>
-      <span id="connection-label" class="text-gray-300 tracking-wide">CONNECTING</span>
-    </div>
-  </header>
-
-  <main class="max-w-5xl mx-auto p-4 lg:p-6 flex flex-col gap-4">
-
-    <!-- price strip -->
-    <div class="bg-base-card border border-white/5 rounded-2xl px-5 py-4 flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <div class="flex items-center gap-2">
-          <select id="market-select" class="bg-white/5 border border-white/10 rounded-lg font-display font-semibold text-sm text-gray-200 pl-2 pr-1 py-1 focus:outline-none focus:border-bull/50">
-            <option value="btcusdt">BTC/USDT</option>
-            <option value="ethusdt">ETH/USDT</option>
-            <option value="bnbusdt">BNB/USDT</option>
-            <option value="solusdt">SOL/USDT</option>
-            <option value="xrpusdt">XRP/USDT</option>
-          </select>
-          <span class="text-[10px] text-gray-500 bg-white/5 px-2 py-0.5 rounded tracking-wide">BINANCE</span>
+<div class="container">
+    <header>
+        <div>
+            <h2 style="margin: 0; font-size: 1.3rem;">🤖 BTC/USDT 30s Trading Bot (Binance Data)</h2>
+            <small style="color: #848e9c;">RSI(14) | MACD(12,26,9) | Bollinger(20,2) | EMA Auto-TF</small>
         </div>
-        <p id="price-display" class="text-4xl sm:text-5xl font-extrabold font-mono tracking-tight mt-1">$--,---.--</p>
-      </div>
-      <div class="flex items-center gap-5">
-        <span id="price-change-badge" class="text-sm font-semibold font-mono px-2.5 py-1 rounded-lg bg-white/5 text-gray-400">--%</span>
-        <div class="text-right">
-          <p class="text-[10px] text-gray-500 uppercase tracking-wide">24h high</p>
-          <p id="stat-high" class="text-sm font-mono text-gray-300">--</p>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <label style="font-size: 0.85rem;">Timeframe: </label>
+            <select id="tf-selector" class="tf-select" onchange="changeTimeframe(this.value)">
+                <option value="1m" selected>1 Minute (EMA 9/21)</option>
+                <option value="5m">5 Minutes (EMA 12/26)</option>
+            </select>
+            <span id="conn-status" class="status-badge status-disconnected">Disconnected</span>
         </div>
-        <div class="text-right">
-          <p class="text-[10px] text-gray-500 uppercase tracking-wide">24h low</p>
-          <p id="stat-low" class="text-sm font-mono text-gray-300">--</p>
+    </header>
+
+    <div class="indicators-grid">
+        <div class="ind-card" style="border-left-color: var(--accent-yellow);">
+            <h4>RSI (14) Standard</h4>
+            <div id="ind-rsi" class="val-main">00.00</div>
+            <div id="ind-rsi-state" class="val-sub">Neutral</div>
         </div>
-      </div>
+        <div class="ind-card" style="border-left-color: var(--accent-blue);">
+            <h4>EMA Config (<span id="ema-tf-label">1m: 9/21</span>)</h4>
+            <div id="ind-ema" class="val-main">Fast: - | Slow: -</div>
+            <div id="ind-ema-state" class="val-sub">Trend: Waiting...</div>
+        </div>
+        <div class="ind-card" style="border-left-color: var(--accent-purple);">
+            <h4>MACD (12, 26, 9)</h4>
+            <div id="ind-macd" class="val-main">MACD: 0.00</div>
+            <div id="ind-macd-sub" class="val-sub">Sig: 0.00 | Hist: 0.00</div>
+        </div>
+        <div class="ind-card" style="border-left-color: var(--accent-green);">
+            <h4>Bollinger Bands (20, 2)</h4>
+            <div id="ind-bb" class="val-main">Mid: 00,000</div>
+            <div id="ind-bb-sub" class="val-sub">Upper: 0 | Lower: 0</div>
+        </div>
     </div>
 
-    <!-- chart -->
-    <div class="bg-base-card border border-white/5 rounded-2xl p-4 lg:p-6">
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <span id="chart-interval-label" class="text-xs text-gray-400">แท่งเทียน 1 นาที</span>
-        <div class="flex items-center gap-1.5">
-          <button type="button" id="tf-btn-1m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">1 นาที</button>
-          <button type="button" id="tf-btn-5m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">5 นาที</button>
+    <div class="top-grid">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <span style="font-weight: bold; font-size: 0.9rem;">📊 Real-time Chart (<span id="chart-tf-title">1m</span>)</span>
+                <span id="price" class="price-display">00,000.00</span>
+            </div>
+            <div id="chart-container"></div>
         </div>
-      </div>
-      <div class="flex flex-wrap items-center gap-4 text-xs mb-3">
-        <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm" style="background:#00c076"></span>แท่งขึ้น</span>
-        <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm" style="background:#ff3b30"></span>แท่งลง</span>
-        <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-0.5" style="background:#f0b90b"></span>EMA เร็ว</span>
-        <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-0.5" style="background:#7dd3fc"></span>EMA ช้า</span>
-        <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm bg-white/10 border border-white/20"></span>Bollinger 20</span>
-      </div>
-      <canvas id="chart-canvas" class="w-full" style="height:360px"></canvas>
-    </div>
 
-    <!-- indicators -->
-    <div>
-      <p class="text-sm font-semibold text-gray-300 mb-1">วิธีอ่านง่ายๆ</p>
-      <p class="text-xs text-gray-500 mb-3 leading-relaxed">แต่ละการ์ดด้านล่างมองตลาดคนละมุม ลองดูว่าส่วนใหญ่ไปทางเดียวกันไหม — ถ้าใช่ แปลว่าตลาดมีแนวโน้มด้านนั้นชัดกว่า ถ้าสวนทางกัน แปลว่าตลาดยังไม่แน่นอน ทุกการ์ดอ่านจากราคาที่เกิดขึ้นแล้วเท่านั้น ไม่ได้พยากรณ์อนาคต และไม่มีอันไหนแม่นยำ 100%</p>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p id="trend-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Trend · EMA 9/21</p>
-        <p class="text-[11px] text-gray-600 mb-2 leading-snug">เส้นค่าเฉลี่ยราคา บอกทิศทางที่ราคาส่วนใหญ่กำลังเอียงไป</p>
-        <p id="trend-value" class="text-lg font-bold font-mono mb-1">--</p>
-        <p id="trend-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
-      </div>
-      <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Momentum · RSI 14</p>
-        <p class="text-[11px] text-gray-600 mb-2 leading-snug">วัดว่าช่วงที่ผ่านมาราคาขึ้นหรือลงเร็วเกินไปหรือไม่</p>
-        <p id="rsi-value" class="text-lg font-bold font-mono mb-1">--</p>
-        <p id="rsi-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
-      </div>
-      <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">MACD · 12,26,9</p>
-        <p class="text-[11px] text-gray-600 mb-2 leading-snug">เทียบความเร็วเส้นค่าเฉลี่ย 2 เส้น บอกโมเมนตัมระยะสั้น</p>
-        <p id="macd-value" class="text-lg font-bold font-mono mb-1">--</p>
-        <p id="macd-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
-      </div>
-      <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Volatility · Bollinger 20</p>
-        <p class="text-[11px] text-gray-600 mb-2 leading-snug">กรอบที่ราคามักแกว่งอยู่ภายใน ยิ่งกว้างยิ่งผันผวน</p>
-        <p id="bb-value" class="text-lg font-bold font-mono mb-1">--</p>
-        <p id="bb-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
-      </div>
-      <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">ตำแหน่งราคาในกรอบ 24h</p>
-        <p class="text-[11px] text-gray-600 mb-2 leading-snug">ราคาตอนนี้อยู่ใกล้จุดสูงสุดหรือต่ำสุดของวันแค่ไหน</p>
-        <p id="range-value" class="text-lg font-bold font-mono mb-1">--</p>
-        <div class="h-1.5 rounded-full bg-white/5 overflow-hidden mt-2">
-          <div id="range-marker" class="h-full bg-amber transition-all duration-500 ease-out" style="width:0%"></div>
+        <div class="card">
+            <h3 style="margin: 0 0 5px 0;">🎯 สัญญาณเทรด (Signal)</h3>
+            <div id="signal-display" class="signal-box signal-wait">WAIT</div>
+
+            <div class="timer-box">
+                ⏱️ เวลาแท่งเทียน: <b id="seconds-display">00</b>s
+                <br>
+                <small id="phase-desc" style="color: #848e9c; font-size: 0.8rem;">กำลังโหลดข้อมูล...</small>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div style="font-size: 0.75rem; color:#848e9c;">Trades Today</div>
+                    <div id="total-trades" class="val">0</div>
+                </div>
+                <div class="stat-item">
+                    <div style="font-size: 0.75rem; color:#848e9c;">Win Rate (24h)</div>
+                    <div id="win-rate" class="val" style="color: var(--accent-yellow);">0%</div>
+                </div>
+                <div class="stat-item">
+                    <div style="font-size: 0.75rem; color:#848e9c;">Wins</div>
+                    <div id="total-wins" class="val win">0</div>
+                </div>
+                <div class="stat-item">
+                    <div style="font-size: 0.75rem; color:#848e9c;">Losses</div>
+                    <div id="total-losses" class="val loss">0</div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <p class="text-[11px] text-gray-500 text-center leading-relaxed px-4">
-      ข้อมูลทั้งหมดคำนวณจากราคาจริงแบบ real-time เพื่อประกอบการตัดสินใจของคุณเอง ไม่ใช่คำแนะนำการลงทุนหรือสัญญาณซื้อขายอัตโนมัติ — ไม่มีระบบใดคาดเดาทิศทางราคาระยะสั้นได้แม่นยำเสมอไป
-    </p>
-
-  </main>
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h3 style="margin: 0; font-size: 1rem;">📜 ประวัติการซื้อขายย้อนหลัง (24 Hours History)</h3>
+            <button class="reset-btn" onclick="clear24hHistory()">Clear History</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>เวลา (Time)</th>
+                        <th>ราคาเปิด (0s)</th>
+                        <th>ราคาซื้อ (30s)</th>
+                        <th>ราคาปิด (60s)</th>
+                        <th>คำสั่ง (Signal)</th>
+                        <th>ผลลัพธ์ (Result)</th>
+                    </tr>
+                </thead>
+                <tbody id="trade-log"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <script>
-(function () {
-  'use strict';
+    // Config & System State
+    let currentTF = '1m';
+    const symbol = 'btcusdt';
+    let ws = null;
+    
+    let candleList = [];
+    let activeTrade = null;
+    let markers = [];
 
-  // ---------------- Config ----------------
-  var MARKETS = [
-    { id: 'btcusdt', label: 'BTC/USDT' },
-    { id: 'ethusdt', label: 'ETH/USDT' },
-    { id: 'bnbusdt', label: 'BNB/USDT' },
-    { id: 'solusdt', label: 'SOL/USDT' },
-    { id: 'xrpusdt', label: 'XRP/USDT' }
-  ];
-  var HISTORY_LIMIT = 100;
-  var VISIBLE_CANDLES = 60;
-  var MAX_RECONNECT_DELAY = 30000;
+    // Local Storage Setup
+    const STORAGE_KEY = 'crypto_bot_history_24h_v2';
+    const DATE_KEY = 'crypto_bot_last_date_v2';
 
-  // Each timeframe keeps the industry-standard RSI/MACD/Bollinger periods (14 / 12,26,9 / 20)
-  // since those are the near-universal defaults regardless of candle size. The EMA pair is the
-  // one place a slightly slower pair is conventionally used on a calmer, less noisy timeframe.
-  var TIMEFRAME_CONFIG = {
-    '1m': { label: '1 นาที', kline: '1m', emaFast: 9,  emaSlow: 21, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 },
-    '5m': { label: '5 นาที', kline: '5m', emaFast: 12, emaSlow: 26, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 }
-  };
-  var TIMEFRAME_ORDER = ['1m', '5m'];
+    function checkAndResetDailyData() {
+        const today = new Date().toISOString().slice(0, 10);
+        const lastDate = localStorage.getItem(DATE_KEY);
 
-  function buildWsUrl(symbol, interval) {
-    return 'wss://stream.binance.com:9443/stream?streams=' + symbol + '@ticker/' + symbol + '@kline_' + interval;
-  }
-  function buildRestUrl(symbol, interval) {
-    return 'https://api.binance.com/api/v3/klines?symbol=' + symbol.toUpperCase() + '&interval=' + interval + '&limit=' + HISTORY_LIMIT;
-  }
+        if (lastDate !== today) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+            localStorage.setItem(DATE_KEY, today);
+            return [];
+        }
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    }
 
-  // ---------------- State ----------------
-  var state = {
-    symbol: 'btcusdt',
-    timeframe: '1m',
-    candles: [],
-    ema9: [],
-    ema21: [],
-    rsi: null,
-    macdLine: [],
-    signalLine: [],
-    histogram: [],
-    bbUpper: [],
-    bbMiddle: [],
-    bbLower: [],
-    lastPrice: null,
-    change24h: null,
-    high24h: null,
-    low24h: null,
-    connectionStatus: 'connecting'
-  };
+    let tradeLogs = checkAndResetDailyData();
 
-  var ws = null;
-  var reconnectAttempts = 0;
-  var reconnectTimer = null;
-  var intentionalClose = false;
+    // Chart Setup (TradingView Lightweight Charts)
+    const chartContainer = document.getElementById('chart-container');
+    const chart = LightweightCharts.createChart(chartContainer, {
+        layout: { background: { color: '#1e2329' }, textColor: '#d1d4dc' },
+        grid: { vertLines: { color: '#2b313a' }, horzLines: { color: '#2b313a' } },
+        timeScale: { timeVisible: true, secondsVisible: true }
+    });
 
-  // ---------------- DOM refs ----------------
-  function $(id) { return document.getElementById(id); }
-  var el = {
-    marketSelect: $('market-select'),
-    connectionDot: $('connection-dot'),
-    connectionLabel: $('connection-label'),
-    priceDisplay: $('price-display'),
-    priceChangeBadge: $('price-change-badge'),
-    statHigh: $('stat-high'),
-    statLow: $('stat-low'),
-    chartCanvas: $('chart-canvas'),
-    trendValue: $('trend-value'),
-    trendLabel: $('trend-label'),
-    rsiValue: $('rsi-value'),
-    rsiLabel: $('rsi-label'),
-    rangeValue: $('range-value'),
-    rangeMarker: $('range-marker'),
-    macdValue: $('macd-value'),
-    macdLabel: $('macd-label'),
-    bbValue: $('bb-value'),
-    bbLabel: $('bb-label')
-  };
+    const candlestickSeries = chart.addCandlestickSeries({
+        upColor: '#0ecb81', downColor: '#f6465d', borderVisible: false, wickUpColor: '#0ecb81', wickDownColor: '#f6465d'
+    });
 
-  // ---------------- Formatters ----------------
-  function fmtPrice(n) {
-    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+    // Bollinger Bands Area Series
+    const bbUpperSeries = chart.addLineSeries({ color: 'rgba(14, 203, 129, 0.4)', lineWidth: 1 });
+    const bbLowerSeries = chart.addLineSeries({ color: 'rgba(246, 70, 93, 0.4)', lineWidth: 1 });
 
-  // ---------------- History (REST) ----------------
-  function loadHistory() {
-    var interval = TIMEFRAME_CONFIG[state.timeframe].kline;
-    return fetch(buildRestUrl(state.symbol, interval))
-      .then(function (res) { return res.json(); })
-      .then(function (raw) {
-        state.candles = raw.map(function (k) {
-          return { t: k[0], o: parseFloat(k[1]), h: parseFloat(k[2]), l: parseFloat(k[3]), c: parseFloat(k[4]), v: parseFloat(k[5]) };
+    async function changeTimeframe(newTF) {
+        currentTF = newTF;
+        document.getElementById('chart-tf-title').innerText = newTF;
+        document.getElementById('ema-tf-label').innerText = newTF === '1m' ? '1m: 9/21' : '5m: 12/26';
+        
+        if (ws) ws.close();
+        await loadHistoricalCandles();
+        connectWebSocket();
+    }
+
+    async function loadHistoricalCandles() {
+        try {
+            const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol.toUpperCase()}&interval=${currentTF}&limit=120`);
+            const data = await res.json();
+            candleList = data.map(d => ({
+                time: d[0] / 1000,
+                open: parseFloat(d[1]),
+                high: parseFloat(d[2]),
+                low: parseFloat(d[3]),
+                close: parseFloat(d[4])
+            }));
+            
+            candlestickSeries.setData(candleList);
+            recalculateAllIndicators();
+            renderLogTable();
+        } catch (e) {
+            console.error("Error loading klines:", e);
+        }
+    }
+
+    function connectWebSocket() {
+        const wsUrl = `wss://stream.binance.com:9443/ws/${symbol}@kline_${currentTF}`;
+        ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+            const el = document.getElementById('conn-status');
+            el.innerText = 'Connected (' + currentTF + ')';
+            el.className = 'status-badge status-connected';
+        };
+
+        ws.onclose = () => {
+            const el = document.getElementById('conn-status');
+            el.innerText = 'Disconnected';
+            el.className = 'status-badge status-disconnected';
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            const kline = data.k;
+
+            const candleTime = kline.t / 1000;
+            const openPrice = parseFloat(kline.o);
+            const highPrice = parseFloat(kline.h);
+            const lowPrice = parseFloat(kline.l);
+            const currentPrice = parseFloat(kline.c);
+            const isCandleClosed = kline.x;
+
+            const candleObj = { time: candleTime, open: openPrice, high: highPrice, low: lowPrice, close: currentPrice };
+            
+            candlestickSeries.update(candleObj);
+
+            // Update Candle List for Calculations
+            if (candleList.length > 0 && candleList[candleList.length - 1].time === candleTime) {
+                candleList[candleList.length - 1] = candleObj;
+            } else {
+                candleList.push(candleObj);
+                if (candleList.length > 150) candleList.shift();
+            }
+
+            // Real-time Indicator Calculation
+            const indResults = recalculateAllIndicators();
+
+            // Timer Calculation
+            const tfInSeconds = currentTF === '1m' ? 60 : 300;
+            const elapsedSeconds = Math.floor((Date.now() - kline.t) / 1000) % tfInSeconds;
+            
+            document.getElementById('price').innerText = currentPrice.toFixed(2);
+            document.getElementById('seconds-display').innerText = elapsedSeconds;
+
+            // Phase 1: Signal Window (0-30s)
+            if (elapsedSeconds <= 30) {
+                document.getElementById('phase-desc').innerText = '🟢 ช่วงส่งสัญญาณ (0-30s)';
+                
+                if (!activeTrade || activeTrade.candleId !== kline.t) {
+                    const signal = generateTradeSignal(indResults, openPrice, currentPrice);
+
+                    if (signal !== 'WAIT') {
+                        activeTrade = {
+                            candleId: kline.t,
+                            openPrice: openPrice,
+                            entryPrice: currentPrice,
+                            signal: signal,
+                            timestamp: new Date().toLocaleTimeString(),
+                            status: 'PENDING'
+                        };
+
+                        updateSignalDisplay(signal);
+
+                        markers.push({
+                            time: candleTime,
+                            position: signal === 'CALL' ? 'belowBar' : 'aboveBar',
+                            color: signal === 'CALL' ? '#0ecb81' : '#f6465d',
+                            shape: signal === 'CALL' ? 'arrowUp' : 'arrowDown',
+                            text: signal
+                        });
+                        candlestickSeries.setMarkers(markers);
+                    }
+                }
+            } else {
+                document.getElementById('phase-desc').innerText = '🔴 ล็อกสัญญาณ รอสรุปผล (31-60s)';
+            }
+
+            // Evaluate Closed Candle
+            if (isCandleClosed && activeTrade && activeTrade.status === 'PENDING') {
+                const closePrice = currentPrice;
+                let isWin = false;
+
+                if (activeTrade.signal === 'CALL' && closePrice > activeTrade.entryPrice) isWin = true;
+                if (activeTrade.signal === 'PUT' && closePrice < activeTrade.entryPrice) isWin = true;
+
+                activeTrade.closePrice = closePrice;
+                activeTrade.status = isWin ? 'WIN' : 'LOSS';
+
+                tradeLogs.unshift(activeTrade);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(tradeLogs));
+
+                renderLogTable();
+                activeTrade = null;
+                updateSignalDisplay('WAIT');
+            }
+        };
+    }
+
+    // Mathematical Indicator Calculation Formulas
+    function recalculateAllIndicators() {
+        const closes = candleList.map(c => c.close);
+        if (closes.length < 30) return null;
+
+        // 1. RSI (14)
+        const rsiVal = calcRSI(closes, 14);
+
+        // 2. Adaptive EMA (1m: 9/21 | 5m: 12/26)
+        const fastPeriod = currentTF === '1m' ? 9 : 12;
+        const slowPeriod = currentTF === '1m' ? 21 : 26;
+
+        const emaFast = calcEMA(closes, fastPeriod);
+        const emaSlow = calcEMA(closes, slowPeriod);
+
+        // 3. MACD (12, 26, 9)
+        const macdRes = calcMACD(closes, 12, 26, 9);
+
+        // 4. Bollinger Bands (20, 2)
+        const bbRes = calcBollingerBands(closes, 20, 2);
+
+        // Update Bollinger Lines on Chart
+        if (bbRes) {
+            const bbUpperData = candleList.map((c, i) => ({ time: c.time, value: bbRes.upperHist[i] })).filter(d => d.value);
+            const bbLowerData = candleList.map((c, i) => ({ time: c.time, value: bbRes.lowerHist[i] })).filter(d => d.value);
+            bbUpperSeries.setData(bbUpperData);
+            bbLowerSeries.setData(bbLowerData);
+        }
+
+        // Update Dashboard Cards
+        document.getElementById('ind-rsi').innerText = rsiVal.toFixed(2);
+        document.getElementById('ind-rsi-state').innerText = rsiVal > 70 ? 'Overbought' : rsiVal < 30 ? 'Oversold' : 'Neutral';
+
+        document.getElementById('ind-ema').innerText = `Fast: ${emaFast.toFixed(2)} | Slow: ${emaSlow.toFixed(2)}`;
+        document.getElementById('ind-ema-state').innerText = emaFast > emaSlow ? 'Bullish Trend 🟢' : 'Bearish Trend 🔴';
+
+        document.getElementById('ind-macd').innerText = `MACD: ${macdRes.macd.toFixed(2)}`;
+        document.getElementById('ind-macd-sub').innerText = `Sig: ${macdRes.signal.toFixed(2)} | Hist: ${macdRes.hist.toFixed(2)}`;
+
+        document.getElementById('ind-bb').innerText = `Mid: ${bbRes.middle.toFixed(2)}`;
+        document.getElementById('ind-bb-sub').innerText = `Up: ${bbRes.upper.toFixed(2)} | Low: ${bbRes.lower.toFixed(2)}`;
+
+        return { rsi: rsiVal, emaFast, emaSlow, macd: macdRes, bb: bbRes };
+    }
+
+    // Strategy Rules Combination
+    function generateTradeSignal(ind, openPrice, currentPrice) {
+        if (!ind) return 'WAIT';
+
+        const priceDiff = currentPrice - openPrice;
+
+        // CALL Condition:
+        // 1. RSI < 45 (Not Overbought)
+        // 2. EMA Fast > EMA Slow (Upward Trend)
+        // 3. MACD Histogram > 0
+        // 4. Price Momentum Positive
+        if (ind.rsi < 45 && ind.emaFast > ind.emaSlow && ind.macd.hist > 0 && priceDiff > 0) {
+            return 'CALL';
+        }
+
+        // PUT Condition:
+        // 1. RSI > 55 (Not Oversold)
+        // 2. EMA Fast < EMA Slow (Downward Trend)
+        // 3. MACD Histogram < 0
+        // 4. Price Momentum Negative
+        if (ind.rsi > 55 && ind.emaFast < ind.emaSlow && ind.macd.hist < 0 && priceDiff < 0) {
+            return 'PUT';
+        }
+
+        return 'WAIT';
+    }
+
+    // Math Formulas
+    function calcRSI(prices, period = 14) {
+        let gains = 0, losses = 0;
+        for (let i = prices.length - period; i < prices.length - 1; i++) {
+            const diff = prices[i + 1] - prices[i];
+            if (diff >= 0) gains += diff; else losses += Math.abs(diff);
+        }
+        const avgGain = gains / period;
+        const avgLoss = losses / period;
+        if (avgLoss === 0) return 100;
+        return 100 - (100 / (1 + (avgGain / avgLoss)));
+    }
+
+    function calcEMA(prices, period) {
+        const k = 2 / (period + 1);
+        let ema = prices[0];
+        for (let i = 1; i < prices.length; i++) {
+            ema = (prices[i] * k) + (ema * (1 - k));
+        }
+        return ema;
+    }
+
+    function calcMACD(prices, fastP = 12, slowP = 26, signalP = 9) {
+        const emaFastHist = [];
+        const emaSlowHist = [];
+        const macdLineHist = [];
+
+        let kFast = 2 / (fastP + 1);
+        let kSlow = 2 / (slowP + 1);
+        let kSig = 2 / (signalP + 1);
+
+        let eFast = prices[0], eSlow = prices[0];
+
+        for (let i = 0; i < prices.length; i++) {
+            eFast = (prices[i] * kFast) + (eFast * (1 - kFast));
+            eSlow = (prices[i] * kSlow) + (eSlow * (1 - kSlow));
+            macdLineHist.push(eFast - eSlow);
+        }
+
+        let sigLine = macdLineHist[0];
+        for (let i = 0; i < macdLineHist.length; i++) {
+            sigLine = (macdLineHist[i] * kSig) + (sigLine * (1 - kSig));
+        }
+
+        const macd = macdLineHist[macdLineHist.length - 1];
+        return { macd: macd, signal: sigLine, hist: macd - sigLine };
+    }
+
+    function calcBollingerBands(prices, period = 20, stdDevMultiplier = 2) {
+        const upperHist = [], lowerHist = [];
+        for (let i = 0; i < prices.length; i++) {
+            if (i < period - 1) {
+                upperHist.push(null);
+                lowerHist.push(null);
+                continue;
+            }
+            const slice = prices.slice(i - period + 1, i + 1);
+            const mean = slice.reduce((a, b) => a + b, 0) / period;
+            const variance = slice.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / period;
+            const stdDev = Math.sqrt(variance);
+
+            upperHist.push(mean + (stdDev * stdDevMultiplier));
+            lowerHist.push(mean - (stdDev * stdDevMultiplier));
+        }
+
+        const lastIdx = prices.length - 1;
+        return {
+            middle: prices.slice(-period).reduce((a, b) => a + b, 0) / period,
+            upper: upperHist[lastIdx],
+            lower: lowerHist[lastIdx],
+            upperHist, lowerHist
+        };
+    }
+
+    // UI Helpers
+    function updateSignalDisplay(signal) {
+        const el = document.getElementById('signal-display');
+        el.innerText = signal;
+        if (signal === 'CALL') el.className = 'signal-box signal-buy';
+        else if (signal === 'PUT') el.className = 'signal-box signal-sell';
+        else el.className = 'signal-box signal-wait';
+    }
+
+    function renderLogTable() {
+        const tbody = document.getElementById('trade-log');
+        tbody.innerHTML = '';
+        let wins = 0, losses = 0;
+
+        tradeLogs.forEach(trade => {
+            if (trade.status === 'WIN') wins++;
+            if (trade.status === 'LOSS') losses++;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${trade.timestamp}</td>
+                <td>${trade.openPrice.toFixed(2)}</td>
+                <td>${trade.entryPrice.toFixed(2)}</td>
+                <td>${trade.closePrice ? trade.closePrice.toFixed(2) : '-'}</td>
+                <td><b>${trade.signal}</b></td>
+                <td class="${trade.status === 'WIN' ? 'win' : 'loss'}">${trade.status}</td>
+            `;
+            tbody.appendChild(row);
         });
-        recomputeIndicators();
-        drawChart();
-      })
-      .catch(function (e) {
-        console.warn('History fetch failed, chart will build live from the stream instead.', e);
-      });
-  }
 
-  // ---------------- WebSocket ----------------
-  function connectWebSocket() {
-    state.connectionStatus = reconnectAttempts === 0 ? 'connecting' : 'reconnecting';
-    renderConnectionStatus();
-    try {
-      ws = new WebSocket(buildWsUrl(state.symbol, TIMEFRAME_CONFIG[state.timeframe].kline));
-    } catch (e) {
-      scheduleReconnect();
-      return;
-    }
-    ws.onopen = function () {
-      reconnectAttempts = 0;
-      state.connectionStatus = 'live';
-      renderConnectionStatus();
-    };
-    ws.onmessage = function (event) {
-      var msg;
-      try { msg = JSON.parse(event.data); } catch (e) { return; }
-      if (!msg || !msg.stream || !msg.data) return;
-      if (msg.stream.indexOf('@ticker') !== -1) handleTicker(msg.data);
-      else if (msg.stream.indexOf('@kline') !== -1) handleKline(msg.data);
-    };
-    ws.onerror = function () {};
-    ws.onclose = function () {
-      if (intentionalClose) { intentionalClose = false; return; }
-      state.connectionStatus = 'offline';
-      renderConnectionStatus();
-      scheduleReconnect();
-    };
-  }
-
-  function scheduleReconnect() {
-    if (reconnectTimer) return;
-    var delay = Math.min(1000 * Math.pow(2, reconnectAttempts), MAX_RECONNECT_DELAY);
-    reconnectAttempts++;
-    reconnectTimer = setTimeout(function () {
-      reconnectTimer = null;
-      connectWebSocket();
-    }, delay);
-  }
-
-  // Shared teardown/reload used whenever the active symbol or timeframe changes
-  function reloadMarketData() {
-    state.candles = [];
-    state.ema9 = []; state.ema21 = []; state.rsi = null;
-    state.macdLine = []; state.signalLine = []; state.histogram = [];
-    state.bbUpper = []; state.bbMiddle = []; state.bbLower = [];
-
-    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-    reconnectAttempts = 0;
-    if (ws) { intentionalClose = true; ws.close(); }
-
-    drawChart();
-    loadHistory().then(function () { connectWebSocket(); });
-  }
-
-  function switchMarket(id) {
-    var market = MARKETS.filter(function (m) { return m.id === id; })[0];
-    if (!market || id === state.symbol) return;
-    state.symbol = id;
-    document.title = 'PULSE — ' + market.label + ' Live Market Read';
-    reloadMarketData();
-  }
-
-  function switchTimeframe(tf) {
-    if (!TIMEFRAME_CONFIG[tf] || tf === state.timeframe) return;
-    state.timeframe = tf;
-    renderTimeframeButtons();
-    renderTimeframeLabels();
-    reloadMarketData();
-  }
-
-  function renderTimeframeButtons() {
-    TIMEFRAME_ORDER.forEach(function (tf) {
-      var btn = $('tf-btn-' + tf);
-      if (!btn) return;
-      var active = tf === state.timeframe;
-      btn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition ' +
-        (active ? 'bg-bull text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10');
-    });
-  }
-
-  function renderTimeframeLabels() {
-    var cfg = TIMEFRAME_CONFIG[state.timeframe];
-    var intervalLabel = $('chart-interval-label');
-    var trendHeader = $('trend-header');
-    if (intervalLabel) intervalLabel.textContent = 'แท่งเทียน ' + cfg.label;
-    if (trendHeader) trendHeader.textContent = 'Trend · EMA ' + cfg.emaFast + '/' + cfg.emaSlow;
-  }
-
-  function renderConnectionStatus() {
-    var map = {
-      connecting:   { color: 'bg-amber', label: 'CONNECTING' },
-      live:         { color: 'bg-bull',  label: 'LIVE' },
-      reconnecting: { color: 'bg-amber', label: 'RECONNECTING' },
-      offline:      { color: 'bg-bear',  label: 'OFFLINE' }
-    };
-    var s = map[state.connectionStatus] || map.connecting;
-    el.connectionDot.className = 'w-2 h-2 rounded-full pulse-dot ' + s.color;
-    el.connectionLabel.textContent = s.label;
-  }
-
-  // ---------------- Ticker (price / 24h stats) ----------------
-  function handleTicker(data) {
-    var price = parseFloat(data.c);
-    if (!isFinite(price)) return;
-    var prevPrice = state.lastPrice;
-    state.lastPrice = price;
-    state.change24h = parseFloat(data.P);
-    state.high24h = parseFloat(data.h);
-    state.low24h = parseFloat(data.l);
-    renderPriceHeader(prevPrice);
-    renderRangeCard();
-  }
-
-  function renderPriceHeader(prevPrice) {
-    el.priceDisplay.textContent = fmtPrice(state.lastPrice);
-    if (prevPrice !== null && prevPrice !== undefined) {
-      var direction = state.lastPrice > prevPrice ? 'up' : (state.lastPrice < prevPrice ? 'down' : null);
-      if (direction) {
-        el.priceDisplay.classList.remove('flash-up', 'flash-down');
-        void el.priceDisplay.offsetWidth;
-        el.priceDisplay.classList.add(direction === 'up' ? 'flash-up' : 'flash-down');
-      }
-    }
-    if (isFinite(state.change24h)) {
-      var positive = state.change24h >= 0;
-      el.priceChangeBadge.textContent = (positive ? '+' : '') + state.change24h.toFixed(2) + '%';
-      el.priceChangeBadge.className = 'text-sm font-semibold font-mono px-2.5 py-1 rounded-lg ' + (positive ? 'bg-bull/10 text-bull' : 'bg-bear/10 text-bear');
-    }
-    if (isFinite(state.high24h)) el.statHigh.textContent = fmtPrice(state.high24h);
-    if (isFinite(state.low24h)) el.statLow.textContent = fmtPrice(state.low24h);
-  }
-
-  function renderRangeCard() {
-    if (!isFinite(state.high24h) || !isFinite(state.low24h) || state.lastPrice === null) return;
-    var range = state.high24h - state.low24h;
-    var pct = range > 0 ? ((state.lastPrice - state.low24h) / range) * 100 : 50;
-    pct = Math.max(0, Math.min(100, pct));
-    el.rangeValue.textContent = pct.toFixed(0) + '% ของกรอบ 24h';
-    el.rangeMarker.style.width = pct + '%';
-  }
-
-  // ---------------- Kline (candles) ----------------
-  function handleKline(data) {
-    var k = data.k;
-    if (!k) return;
-    var candle = { t: k.t, o: parseFloat(k.o), h: parseFloat(k.h), l: parseFloat(k.l), c: parseFloat(k.c), v: parseFloat(k.v) };
-    var candles = state.candles;
-    var last = candles[candles.length - 1];
-    if (last && last.t === candle.t) {
-      candles[candles.length - 1] = candle;
-    } else {
-      candles.push(candle);
-      if (candles.length > HISTORY_LIMIT) candles.shift();
-    }
-    recomputeIndicators();
-    drawChart();
-  }
-
-  // ---------------- Indicators ----------------
-  function computeEMASeries(candles, period) {
-    var k = 2 / (period + 1);
-    var result = new Array(candles.length).fill(null);
-    if (candles.length < period) return result;
-    var sum = 0;
-    for (var i = 0; i < period; i++) sum += candles[i].c;
-    var ema = sum / period;
-    result[period - 1] = ema;
-    for (var i = period; i < candles.length; i++) {
-      ema = candles[i].c * k + ema * (1 - k);
-      result[i] = ema;
-    }
-    return result;
-  }
-
-  function computeRSI(candles, period) {
-    if (candles.length < period + 1) return null;
-    var gains = 0, losses = 0, i;
-    for (i = 1; i <= period; i++) {
-      var change = candles[i].c - candles[i - 1].c;
-      if (change > 0) gains += change; else losses += -change;
-    }
-    var avgGain = gains / period;
-    var avgLoss = losses / period;
-    for (i = period + 1; i < candles.length; i++) {
-      var ch = candles[i].c - candles[i - 1].c;
-      var gain = ch > 0 ? ch : 0;
-      var loss = ch < 0 ? -ch : 0;
-      avgGain = (avgGain * (period - 1) + gain) / period;
-      avgLoss = (avgLoss * (period - 1) + loss) / period;
-    }
-    if (avgLoss === 0) return 100;
-    var rs = avgGain / avgLoss;
-    return 100 - (100 / (1 + rs));
-  }
-
-  function computeEMAOfValues(values, period) {
-    var result = new Array(values.length).fill(null);
-    var k = 2 / (period + 1);
-    var startIdx = -1;
-    for (var i = 0; i < values.length; i++) { if (values[i] != null) { startIdx = i; break; } }
-    if (startIdx === -1 || values.length - startIdx < period) return result;
-    var sum = 0;
-    for (var i = startIdx; i < startIdx + period; i++) sum += values[i];
-    var ema = sum / period;
-    result[startIdx + period - 1] = ema;
-    for (var i = startIdx + period; i < values.length; i++) {
-      ema = values[i] * k + ema * (1 - k);
-      result[i] = ema;
-    }
-    return result;
-  }
-
-  function computeMACD(candles, fast, slow, signal) {
-    var emaFast = computeEMASeries(candles, fast);
-    var emaSlow = computeEMASeries(candles, slow);
-    var macdLine = candles.map(function (c, i) {
-      return (emaFast[i] != null && emaSlow[i] != null) ? emaFast[i] - emaSlow[i] : null;
-    });
-    var signalLine = computeEMAOfValues(macdLine, signal);
-    var histogram = macdLine.map(function (v, i) {
-      return (v != null && signalLine[i] != null) ? v - signalLine[i] : null;
-    });
-    return { macdLine: macdLine, signalLine: signalLine, histogram: histogram };
-  }
-
-  function computeBollinger(candles, period, mult) {
-    var n = candles.length;
-    var upper = new Array(n).fill(null);
-    var middle = new Array(n).fill(null);
-    var lower = new Array(n).fill(null);
-    for (var i = period - 1; i < n; i++) {
-      var sum = 0;
-      for (var j = i - period + 1; j <= i; j++) sum += candles[j].c;
-      var mean = sum / period;
-      var variance = 0;
-      for (var j = i - period + 1; j <= i; j++) variance += Math.pow(candles[j].c - mean, 2);
-      var sd = Math.sqrt(variance / period);
-      middle[i] = mean;
-      upper[i] = mean + mult * sd;
-      lower[i] = mean - mult * sd;
-    }
-    return { upper: upper, middle: middle, lower: lower };
-  }
-
-  function recomputeIndicators() {
-    var cfg = TIMEFRAME_CONFIG[state.timeframe];
-    state.ema9 = computeEMASeries(state.candles, cfg.emaFast);
-    state.ema21 = computeEMASeries(state.candles, cfg.emaSlow);
-    state.rsi = computeRSI(state.candles, cfg.rsi);
-    var macd = computeMACD(state.candles, cfg.macdFast, cfg.macdSlow, cfg.macdSignal);
-    state.macdLine = macd.macdLine;
-    state.signalLine = macd.signalLine;
-    state.histogram = macd.histogram;
-    var bb = computeBollinger(state.candles, cfg.bbPeriod, cfg.bbStddev);
-    state.bbUpper = bb.upper;
-    state.bbMiddle = bb.middle;
-    state.bbLower = bb.lower;
-    renderIndicatorCards();
-  }
-
-  function renderIndicatorCards() {
-    var n = state.candles.length;
-    if (n === 0) return;
-    var cfg = TIMEFRAME_CONFIG[state.timeframe];
-
-    var e9 = state.ema9[n - 1];
-    var e21 = state.ema21[n - 1];
-    if (e9 != null && e21 != null) {
-      el.trendValue.textContent = fmtPrice(e9) + ' / ' + fmtPrice(e21);
-      var diffPct = ((e9 - e21) / e21) * 100;
-      if (Math.abs(diffPct) < 0.02) {
-        el.trendLabel.textContent = 'EMA' + cfg.emaFast + ' ใกล้เคียง EMA' + cfg.emaSlow + ' — ยังไม่มีแนวโน้มชัดเจน';
-        el.trendLabel.className = 'text-xs text-gray-400';
-      } else if (e9 > e21) {
-        el.trendLabel.textContent = 'EMA' + cfg.emaFast + ' อยู่เหนือ EMA' + cfg.emaSlow + ' — แนวโน้มระยะสั้นเอียงขึ้น';
-        el.trendLabel.className = 'text-xs text-bull';
-      } else {
-        el.trendLabel.textContent = 'EMA' + cfg.emaFast + ' อยู่ใต้ EMA' + cfg.emaSlow + ' — แนวโน้มระยะสั้นเอียงลง';
-        el.trendLabel.className = 'text-xs text-bear';
-      }
+        const total = wins + losses;
+        document.getElementById('total-trades').innerText = total;
+        document.getElementById('total-wins').innerText = wins;
+        document.getElementById('total-losses').innerText = losses;
+        document.getElementById('win-rate').innerText = total > 0 ? `${((wins / total) * 100).toFixed(1)}%` : '0%';
     }
 
-    if (state.rsi != null) {
-      el.rsiValue.textContent = state.rsi.toFixed(1);
-      if (state.rsi >= 70) {
-        el.rsiLabel.textContent = 'โซนซื้อมากเกินไป (Overbought)';
-        el.rsiLabel.className = 'text-xs text-amber';
-      } else if (state.rsi <= 30) {
-        el.rsiLabel.textContent = 'โซนขายมากเกินไป (Oversold)';
-        el.rsiLabel.className = 'text-xs text-amber';
-      } else {
-        el.rsiLabel.textContent = 'โซนกลาง (Neutral)';
-        el.rsiLabel.className = 'text-xs text-gray-400';
-      }
+    function clear24hHistory() {
+        if (confirm('คุณต้องการลบประวัติการเทรด 24 ชั่วโมงทั้งหมดใช่หรือไม่?')) {
+            tradeLogs = [];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+            renderLogTable();
+        }
     }
 
-    var macdV = state.macdLine[n - 1];
-    var sigV = state.signalLine[n - 1];
-    if (macdV != null && sigV != null) {
-      el.macdValue.textContent = macdV.toFixed(1) + ' / ' + sigV.toFixed(1);
-      if (Math.abs(macdV - sigV) < 0.01) {
-        el.macdLabel.textContent = 'MACD ใกล้เคียงเส้น Signal — โมเมนตัมยังไม่ชัดเจน';
-        el.macdLabel.className = 'text-xs text-gray-400';
-      } else if (macdV > sigV) {
-        el.macdLabel.textContent = 'MACD อยู่เหนือเส้น Signal — โมเมนตัมเอียงบวก';
-        el.macdLabel.className = 'text-xs text-bull';
-      } else {
-        el.macdLabel.textContent = 'MACD อยู่ใต้เส้น Signal — โมเมนตัมเอียงลบ';
-        el.macdLabel.className = 'text-xs text-bear';
-      }
-    } else {
-      el.macdValue.textContent = 'รอข้อมูล';
-      el.macdLabel.textContent = 'ต้องใช้แท่งเทียนเพิ่มอีกสักครู่';
-      el.macdLabel.className = 'text-xs text-gray-400';
-    }
-
-    var bbU = state.bbUpper[n - 1], bbL = state.bbLower[n - 1];
-    if (bbU != null && bbL != null && state.lastPrice != null) {
-      var bandWidth = bbU - bbL;
-      var posInBand = bandWidth > 0 ? ((state.lastPrice - bbL) / bandWidth) * 100 : 50;
-      el.bbValue.textContent = posInBand.toFixed(0) + '% ของแบนด์';
-      if (posInBand >= 90 || posInBand <= 10) {
-        el.bbLabel.textContent = 'ราคาชิดขอบแบนด์ — ผันผวนสูง ไม่ได้แปลว่าราคาจะกลับตัว';
-        el.bbLabel.className = 'text-xs text-amber';
-      } else {
-        el.bbLabel.textContent = 'ราคาอยู่ในกรอบแบนด์ปกติ';
-        el.bbLabel.className = 'text-xs text-gray-400';
-      }
-    } else {
-      el.bbValue.textContent = 'รอข้อมูล';
-      el.bbLabel.textContent = 'ต้องใช้แท่งเทียนเพิ่มอีกสักครู่';
-      el.bbLabel.className = 'text-xs text-gray-400';
-    }
-  }
-
-  // ---------------- Chart ----------------
-  function drawEmaLine(ctx, series, xAt, yAt, n, color) {
-    ctx.beginPath();
-    var started = false;
-    for (var i = 0; i < n; i++) {
-      var v = series[i];
-      if (v == null) continue;
-      var x = xAt(i), y = yAt(v);
-      if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
-    }
-    if (started) {
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1.5;
-      ctx.lineJoin = 'round';
-      ctx.stroke();
-    }
-  }
-
-  function drawChart() {
-    var canvas = el.chartCanvas;
-    var dpr = window.devicePixelRatio || 1;
-    var rect = canvas.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    var neededW = Math.round(rect.width * dpr);
-    var neededH = Math.round(rect.height * dpr);
-    if (canvas.width !== neededW || canvas.height !== neededH) {
-      canvas.width = neededW;
-      canvas.height = neededH;
-    }
-    var ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var w = rect.width, h = rect.height;
-    ctx.clearRect(0, 0, w, h);
-
-    var candles = state.candles;
-    if (candles.length < 2) return;
-
-    var startIdx = Math.max(0, candles.length - VISIBLE_CANDLES);
-    var visible = candles.slice(startIdx);
-    var visibleEma9 = state.ema9.slice(startIdx);
-    var visibleEma21 = state.ema21.slice(startIdx);
-    var n = visible.length;
-
-    var timeLabelH = 14;
-    var volH = Math.round((h - timeLabelH) * 0.16);
-    var priceH = h - volH - timeLabelH - 6;
-
-    var highs = visible.map(function (c) { return c.h; });
-    var lows = visible.map(function (c) { return c.l; });
-    var maxP = Math.max.apply(null, highs);
-    var minP = Math.min.apply(null, lows);
-    var padAmt = (maxP - minP) * 0.1 || maxP * 0.001;
-    maxP += padAmt; minP -= padAmt;
-    var range = (maxP - minP) || 1;
-
-    var maxVol = Math.max.apply(null, visible.map(function (c) { return c.v; })) || 1;
-    var slotW = w / n;
-    var bodyW = Math.max(1.5, slotW * 0.62);
-
-    function xAt(i) { return i * slotW + slotW / 2; }
-    function yAt(price) { return ((maxP - price) / range) * priceH; }
-
-    // gridlines + price labels
-    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
-    ctx.font = '10px "JetBrains Mono", monospace';
-    ctx.textBaseline = 'middle';
-    var gridLines = 4;
-    for (var g = 0; g <= gridLines; g++) {
-      var gy = (priceH / gridLines) * g;
-      var gp = maxP - (range / gridLines) * g;
-      ctx.beginPath();
-      ctx.moveTo(0, gy);
-      ctx.lineTo(w, gy);
-      ctx.stroke();
-      ctx.fillText(gp.toLocaleString('en-US', { maximumFractionDigits: 0 }), 4, Math.max(10, gy - 6));
-    }
-
-    // Bollinger Band channel (subtle background)
-    var visibleBbUpper = state.bbUpper.slice(startIdx);
-    var visibleBbLower = state.bbLower.slice(startIdx);
-    var visibleBbMiddle = state.bbMiddle.slice(startIdx);
-    ctx.beginPath();
-    var bandStarted = false;
-    for (var bi = 0; bi < n; bi++) {
-      if (visibleBbUpper[bi] == null) continue;
-      var bx = xAt(bi), by = yAt(visibleBbUpper[bi]);
-      if (!bandStarted) { ctx.moveTo(bx, by); bandStarted = true; } else { ctx.lineTo(bx, by); }
-    }
-    for (var bj = n - 1; bj >= 0; bj--) {
-      if (visibleBbLower[bj] == null) continue;
-      ctx.lineTo(xAt(bj), yAt(visibleBbLower[bj]));
-    }
-    if (bandStarted) {
-      ctx.closePath();
-      ctx.fillStyle = 'rgba(234,236,239,0.045)';
-      ctx.fill();
-    }
-    drawEmaLine(ctx, visibleBbMiddle, xAt, yAt, n, 'rgba(234,236,239,0.22)');
-
-    // volume bars
-    visible.forEach(function (c, i) {
-      var vh = (c.v / maxVol) * (volH - 4);
-      var up = c.c >= c.o;
-      ctx.fillStyle = up ? 'rgba(0,192,118,0.35)' : 'rgba(255,59,48,0.35)';
-      ctx.fillRect(xAt(i) - bodyW / 2, (h - timeLabelH) - vh, bodyW, vh);
-    });
-
-    // candles
-    visible.forEach(function (c, i) {
-      var x = xAt(i);
-      var up = c.c >= c.o;
-      var color = up ? '#00c076' : '#ff3b30';
-      ctx.strokeStyle = color;
-      ctx.fillStyle = color;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(x, yAt(c.h));
-      ctx.lineTo(x, yAt(c.l));
-      ctx.stroke();
-      var yO = yAt(c.o), yC = yAt(c.c);
-      var top = Math.min(yO, yC);
-      var bh = Math.max(1, Math.abs(yC - yO));
-      ctx.fillRect(x - bodyW / 2, top, bodyW, bh);
-    });
-
-    // EMA overlays
-    drawEmaLine(ctx, visibleEma9, xAt, yAt, n, '#f0b90b');
-    drawEmaLine(ctx, visibleEma21, xAt, yAt, n, '#7dd3fc');
-
-    // time labels
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
-    ctx.textBaseline = 'top';
-    var step = Math.max(1, Math.round(n / 6));
-    for (var i = 0; i < n; i += step) {
-      var d = new Date(visible[i].t);
-      var label = pad2(d.getHours()) + ':' + pad2(d.getMinutes());
-      ctx.fillText(label, Math.max(0, xAt(i) - 14), h - timeLabelH + 2);
-    }
-  }
-
-  el.marketSelect.addEventListener('change', function () { switchMarket(this.value); });
-  $('tf-btn-1m').addEventListener('click', function () { switchTimeframe('1m'); });
-  $('tf-btn-5m').addEventListener('click', function () { switchTimeframe('5m'); });
-
-  window.addEventListener('resize', function () { drawChart(); });
-
-  // ---------------- Init ----------------
-  renderConnectionStatus();
-  renderTimeframeButtons();
-  renderTimeframeLabels();
-  loadHistory().then(function () { connectWebSocket(); });
-})();
+    // Start App
+    changeTimeframe('1m');
 </script>
+
 </body>
-  </html>
-  
+</html>
