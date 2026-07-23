@@ -122,8 +122,10 @@
       <div class="flex items-center justify-between gap-2 mb-3">
         <span id="chart-interval-label" class="text-xs text-gray-400">แท่งเทียน 1 นาที</span>
         <div class="flex items-center gap-1.5">
-          <button type="button" id="tf-btn-1m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">1 นาที</button>
-          <button type="button" id="tf-btn-5m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">5 นาที</button>
+          <button type="button" id="tf-btn-1m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">1m</button>
+          <button type="button" id="tf-btn-3m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">3m</button>
+          <button type="button" id="tf-btn-5m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">5m</button>
+          <button type="button" id="tf-btn-1h" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">1h</button>
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-4 text-xs mb-3">
@@ -221,9 +223,11 @@
   // one place a slightly slower pair is conventionally used on a calmer, less noisy timeframe.
   var TIMEFRAME_CONFIG = {
     '1m': { label: '1 นาที', kline: '1m', emaFast: 9,  emaSlow: 21, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 },
-    '5m': { label: '5 นาที', kline: '5m', emaFast: 12, emaSlow: 26, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 }
+    '3m': { label: '3 นาที', kline: '3m', emaFast: 9,  emaSlow: 21, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 },
+    '5m': { label: '5 นาที', kline: '5m', emaFast: 12, emaSlow: 26, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 },
+    '1h': { label: '1 ชั่วโมง', kline: '1h', emaFast: 20, emaSlow: 50, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 }
   };
-  var TIMEFRAME_ORDER = ['1m', '5m'];
+  var TIMEFRAME_ORDER = ['1m', '3m', '5m', '1h'];
 
   function buildWsUrl(symbol, interval) {
     return 'wss://stream.binance.com:9443/stream?streams=' + symbol + '@ticker/' + symbol + '@kline_' + interval;
@@ -974,7 +978,9 @@
 
   el.marketSelect.addEventListener('change', function () { switchMarket(this.value); });
   $('tf-btn-1m').addEventListener('click', function () { switchTimeframe('1m'); });
+  $('tf-btn-3m').addEventListener('click', function () { switchTimeframe('3m'); });
   $('tf-btn-5m').addEventListener('click', function () { switchTimeframe('5m'); });
+  $('tf-btn-1h').addEventListener('click', function () { switchTimeframe('1h'); });
 
   window.addEventListener('resize', function () { drawChart(); });
 
