@@ -119,8 +119,13 @@
 
     <!-- chart -->
     <div class="bg-base-card border border-white/5 rounded-2xl p-4 lg:p-6">
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <span id="chart-interval-label" class="text-xs text-gray-400">แท่งเทียน 1 นาที</span>
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div class="flex items-center gap-3">
+          <span id="chart-interval-label" class="text-xs text-gray-400">แท่งเทียน 1 นาที</span>
+          <span class="flex items-center gap-1.5 text-xs text-gray-500 bg-white/5 px-2 py-1 rounded-lg">
+            แท่งถัดไปใน <span id="candle-countdown" class="font-mono text-gray-200">--:--</span>
+          </span>
+        </div>
         <div class="flex items-center gap-1.5">
           <button type="button" id="tf-btn-1m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">1m</button>
           <button type="button" id="tf-btn-3m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">3m</button>
@@ -134,6 +139,11 @@
         <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-0.5" style="background:#f0b90b"></span>EMA เร็ว</span>
         <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-0.5" style="background:#7dd3fc"></span>EMA ช้า</span>
         <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm bg-white/10 border border-white/20"></span>Bollinger 20</span>
+        <span class="flex items-center gap-1.5 text-gray-400">
+          <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,1 9,8 1,8" fill="#eaecef" opacity="0.9"/></svg>
+          Williams Fractal
+        </span>
+        <span class="flex items-center gap-1.5 text-gray-400">วอลุ่ม: เขียว=แรงซื้อ แดง=แรงขาย</span>
       </div>
       <canvas id="chart-canvas" class="w-full" style="height:360px"></canvas>
     </div>
@@ -143,7 +153,7 @@
       <p class="text-sm font-semibold text-gray-300 mb-1">วิธีอ่านง่ายๆ</p>
       <p class="text-xs text-gray-500 mb-3 leading-relaxed">แต่ละการ์ดด้านล่างมองตลาดคนละมุม ลองดูว่าส่วนใหญ่ไปทางเดียวกันไหม — ถ้าใช่ แปลว่าตลาดมีแนวโน้มด้านนั้นชัดกว่า ถ้าสวนทางกัน แปลว่าตลาดยังไม่แน่นอน ทุกการ์ดอ่านจากราคาที่เกิดขึ้นแล้วเท่านั้น ไม่ได้พยากรณ์อนาคต และไม่มีอันไหนแม่นยำ 100%</p>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       <div class="bg-base-card border border-white/5 rounded-2xl p-5">
         <p id="trend-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Trend · EMA 9/21</p>
         <p class="text-[11px] text-gray-600 mb-2 leading-snug">เส้นค่าเฉลี่ยราคา บอกทิศทางที่ราคาส่วนใหญ่กำลังเอียงไป</p>
@@ -193,6 +203,24 @@
         <div class="h-1.5 rounded-full bg-white/5 overflow-hidden mt-2">
           <div id="range-marker" class="h-full bg-amber transition-all duration-500 ease-out" style="width:0%"></div>
         </div>
+      </div>
+      <div class="bg-base-card border border-white/5 rounded-2xl p-5">
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Williams Fractal</p>
+        <p class="text-[11px] text-gray-600 mb-2 leading-snug">จุดสวิงสูง/ต่ำที่ยืนยันแล้วจากแท่งข้างเคียง 2 ฝั่ง</p>
+        <p id="fractal-high-value" class="text-sm font-bold font-mono">--</p>
+        <p id="fractal-high-label" class="text-xs text-gray-400 mb-1.5">กำลังโหลดข้อมูล…</p>
+        <p id="fractal-low-value" class="text-sm font-bold font-mono">--</p>
+        <p id="fractal-low-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
+      </div>
+      <div class="bg-base-card border border-white/5 rounded-2xl p-5">
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">แรงซื้อขาย</p>
+        <p class="text-[11px] text-gray-600 mb-2 leading-snug">สัดส่วนวอลุ่มฝั่งซื้อ/ขายจริงในช่วงที่แสดงบนกราฟ</p>
+        <p id="volforce-value" class="text-lg font-bold font-mono mb-1">--</p>
+        <div class="flex h-1.5 rounded-full bg-white/5 overflow-hidden mt-2">
+          <div id="volforce-buy-bar" class="h-full bg-bull transition-all duration-500 ease-out" style="width:50%"></div>
+          <div id="volforce-sell-bar" class="h-full bg-bear transition-all duration-500 ease-out" style="width:50%"></div>
+        </div>
+        <p id="volforce-label" class="text-xs text-gray-400 mt-1.5">กำลังโหลดข้อมูล…</p>
       </div>
     </div>
 
@@ -256,6 +284,8 @@
     plusDI: [],
     minusDI: [],
     adx: [],
+    fractalHigh: [],
+    fractalLow: [],
     lastPrice: null,
     change24h: null,
     high24h: null,
@@ -294,7 +324,16 @@
     atrValue: $('atr-value'),
     atrLabel: $('atr-label'),
     adxValue: $('adx-value'),
-    adxLabel: $('adx-label')
+    adxLabel: $('adx-label'),
+    candleCountdown: $('candle-countdown'),
+    fractalHighValue: $('fractal-high-value'),
+    fractalHighLabel: $('fractal-high-label'),
+    fractalLowValue: $('fractal-low-value'),
+    fractalLowLabel: $('fractal-low-label'),
+    volForceValue: $('volforce-value'),
+    volForceLabel: $('volforce-label'),
+    volForceBuyBar: $('volforce-buy-bar'),
+    volForceSellBar: $('volforce-sell-bar')
   };
 
   // ---------------- Formatters ----------------
@@ -310,7 +349,7 @@
       .then(function (res) { return res.json(); })
       .then(function (raw) {
         state.candles = raw.map(function (k) {
-          return { t: k[0], o: parseFloat(k[1]), h: parseFloat(k[2]), l: parseFloat(k[3]), c: parseFloat(k[4]), v: parseFloat(k[5]) };
+          return { t: k[0], o: parseFloat(k[1]), h: parseFloat(k[2]), l: parseFloat(k[3]), c: parseFloat(k[4]), v: parseFloat(k[5]), closeTime: k[6], buyVol: parseFloat(k[9]) };
         });
         recomputeIndicators();
         drawChart();
@@ -369,6 +408,7 @@
     state.bbUpper = []; state.bbMiddle = []; state.bbLower = [];
     state.stochK = []; state.stochD = []; state.atr = [];
     state.plusDI = []; state.minusDI = []; state.adx = [];
+    state.fractalHigh = []; state.fractalLow = [];
 
     if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
     reconnectAttempts = 0;
@@ -469,7 +509,7 @@
   function handleKline(data) {
     var k = data.k;
     if (!k) return;
-    var candle = { t: k.t, o: parseFloat(k.o), h: parseFloat(k.h), l: parseFloat(k.l), c: parseFloat(k.c), v: parseFloat(k.v) };
+    var candle = { t: k.t, o: parseFloat(k.o), h: parseFloat(k.h), l: parseFloat(k.l), c: parseFloat(k.c), v: parseFloat(k.v), closeTime: k.T, buyVol: parseFloat(k.V) };
     var candles = state.candles;
     var last = candles[candles.length - 1];
     if (last && last.t === candle.t) {
@@ -684,6 +724,34 @@
     return { plusDI: plusDI, minusDI: minusDI, adx: adx };
   }
 
+  function computeFractals(candles) {
+    var n = candles.length;
+    var fractalHigh = new Array(n).fill(false);
+    var fractalLow = new Array(n).fill(false);
+    for (var i = 2; i < n - 2; i++) {
+      if (candles[i].h > candles[i - 2].h && candles[i].h > candles[i - 1].h &&
+          candles[i].h > candles[i + 1].h && candles[i].h > candles[i + 2].h) {
+        fractalHigh[i] = true;
+      }
+      if (candles[i].l < candles[i - 2].l && candles[i].l < candles[i - 1].l &&
+          candles[i].l < candles[i + 1].l && candles[i].l < candles[i + 2].l) {
+        fractalLow[i] = true;
+      }
+    }
+    return { fractalHigh: fractalHigh, fractalLow: fractalLow };
+  }
+
+  function computeBuySellRatio(candles, windowSize) {
+    var start = Math.max(0, candles.length - windowSize);
+    var buySum = 0, totalSum = 0;
+    for (var i = start; i < candles.length; i++) {
+      if (candles[i].buyVol != null && isFinite(candles[i].buyVol)) buySum += candles[i].buyVol;
+      totalSum += candles[i].v;
+    }
+    if (totalSum <= 0) return null;
+    return (buySum / totalSum) * 100;
+  }
+
   function recomputeIndicators() {
     var cfg = TIMEFRAME_CONFIG[state.timeframe];
     state.ema9 = computeEMASeries(state.candles, cfg.emaFast);
@@ -705,6 +773,9 @@
     state.plusDI = adx.plusDI;
     state.minusDI = adx.minusDI;
     state.adx = adx.adx;
+    var fractals = computeFractals(state.candles);
+    state.fractalHigh = fractals.fractalHigh;
+    state.fractalLow = fractals.fractalLow;
     renderIndicatorCards();
   }
 
@@ -833,6 +904,72 @@
       el.adxLabel.textContent = 'ต้องใช้แท่งเทียนเพิ่มอีกสักครู่';
       el.adxLabel.className = 'text-xs text-gray-400';
     }
+
+    var lastHighIdx = -1, lastLowIdx = -1;
+    for (var fi = n - 1; fi >= 0; fi--) {
+      if (lastHighIdx === -1 && state.fractalHigh[fi]) lastHighIdx = fi;
+      if (lastLowIdx === -1 && state.fractalLow[fi]) lastLowIdx = fi;
+      if (lastHighIdx !== -1 && lastLowIdx !== -1) break;
+    }
+    if (lastHighIdx !== -1) {
+      el.fractalHighValue.textContent = fmtPrice(state.candles[lastHighIdx].h);
+      el.fractalHighLabel.textContent = 'Swing High · ' + (n - 1 - lastHighIdx) + ' แท่งที่แล้ว';
+    } else {
+      el.fractalHighValue.textContent = 'รอข้อมูล';
+      el.fractalHighLabel.textContent = 'ยังไม่พบ Swing High ในช่วงนี้';
+    }
+    if (lastLowIdx !== -1) {
+      el.fractalLowValue.textContent = fmtPrice(state.candles[lastLowIdx].l);
+      el.fractalLowLabel.textContent = 'Swing Low · ' + (n - 1 - lastLowIdx) + ' แท่งที่แล้ว';
+    } else {
+      el.fractalLowValue.textContent = 'รอข้อมูล';
+      el.fractalLowLabel.textContent = 'ยังไม่พบ Swing Low ในช่วงนี้';
+    }
+
+    var buyPct = computeBuySellRatio(state.candles, VISIBLE_CANDLES);
+    if (buyPct != null) {
+      var sellPct = 100 - buyPct;
+      el.volForceValue.textContent = buyPct.toFixed(0) + '% / ' + sellPct.toFixed(0) + '%';
+      el.volForceBuyBar.style.width = buyPct + '%';
+      el.volForceSellBar.style.width = sellPct + '%';
+      if (buyPct >= 55) {
+        el.volForceLabel.textContent = 'แรงซื้อมากกว่าแรงขายในช่วงนี้';
+        el.volForceLabel.className = 'text-xs text-bull';
+      } else if (buyPct <= 45) {
+        el.volForceLabel.textContent = 'แรงขายมากกว่าแรงซื้อในช่วงนี้';
+        el.volForceLabel.className = 'text-xs text-bear';
+      } else {
+        el.volForceLabel.textContent = 'แรงซื้อและแรงขายใกล้เคียงกัน';
+        el.volForceLabel.className = 'text-xs text-gray-400';
+      }
+    } else {
+      el.volForceValue.textContent = 'รอข้อมูล';
+      el.volForceLabel.textContent = 'ต้องใช้แท่งเทียนเพิ่มอีกสักครู่';
+      el.volForceLabel.className = 'text-xs text-gray-400';
+    }
+  }
+
+  // ---------------- Candle close countdown ----------------
+  var candleCountdownInterval = null;
+  function fmtCountdown(ms) {
+    if (ms < 0) ms = 0;
+    var totalSec = Math.ceil(ms / 1000);
+    var hh = Math.floor(totalSec / 3600);
+    var mm = Math.floor((totalSec % 3600) / 60);
+    var ss = totalSec % 60;
+    if (hh > 0) return hh + ':' + pad2(mm) + ':' + pad2(ss);
+    return mm + ':' + pad2(ss);
+  }
+  function startCandleCountdown() {
+    if (candleCountdownInterval) clearInterval(candleCountdownInterval);
+    candleCountdownInterval = setInterval(function () {
+      if (!el.candleCountdown) return;
+      var candles = state.candles;
+      if (!candles.length) { el.candleCountdown.textContent = '--:--'; return; }
+      var last = candles[candles.length - 1];
+      if (!last.closeTime) { el.candleCountdown.textContent = '--:--'; return; }
+      el.candleCountdown.textContent = fmtCountdown(last.closeTime - Date.now());
+    }, 250);
   }
 
   // ---------------- Chart ----------------
@@ -935,12 +1072,17 @@
     }
     drawEmaLine(ctx, visibleBbMiddle, xAt, yAt, n, 'rgba(234,236,239,0.22)');
 
-    // volume bars
+    // volume bars — stacked buy (bottom, green) / sell (top, red) using real taker buy/sell volume
     visible.forEach(function (c, i) {
-      var vh = (c.v / maxVol) * (volH - 4);
-      var up = c.c >= c.o;
-      ctx.fillStyle = up ? 'rgba(0,192,118,0.35)' : 'rgba(255,59,48,0.35)';
-      ctx.fillRect(xAt(i) - bodyW / 2, (h - timeLabelH) - vh, bodyW, vh);
+      var totalH = (c.v / maxVol) * (volH - 4);
+      var buyRatio = (c.v > 0 && c.buyVol != null) ? Math.max(0, Math.min(1, c.buyVol / c.v)) : 0.5;
+      var buyH = totalH * buyRatio;
+      var sellH = totalH - buyH;
+      var baseY = h - timeLabelH;
+      ctx.fillStyle = 'rgba(255,59,48,0.35)';
+      ctx.fillRect(xAt(i) - bodyW / 2, baseY - totalH, bodyW, sellH);
+      ctx.fillStyle = 'rgba(0,192,118,0.35)';
+      ctx.fillRect(xAt(i) - bodyW / 2, baseY - buyH, bodyW, buyH);
     });
 
     // candles
@@ -965,6 +1107,31 @@
     drawEmaLine(ctx, visibleEma9, xAt, yAt, n, '#f0b90b');
     drawEmaLine(ctx, visibleEma21, xAt, yAt, n, '#7dd3fc');
 
+    // Williams Fractal markers — neutral color since fractals mark swing points, not a buy/sell call
+    var visibleFractalHigh = state.fractalHigh.slice(startIdx);
+    var visibleFractalLow = state.fractalLow.slice(startIdx);
+    ctx.fillStyle = 'rgba(234,236,239,0.9)';
+    for (var fi = 0; fi < n; fi++) {
+      if (visibleFractalHigh[fi]) {
+        var hx = xAt(fi), hy = yAt(visible[fi].h) - 10;
+        ctx.beginPath();
+        ctx.moveTo(hx, hy + 4);
+        ctx.lineTo(hx - 4, hy - 4);
+        ctx.lineTo(hx + 4, hy - 4);
+        ctx.closePath();
+        ctx.fill();
+      }
+      if (visibleFractalLow[fi]) {
+        var lx = xAt(fi), ly = yAt(visible[fi].l) + 10;
+        ctx.beginPath();
+        ctx.moveTo(lx, ly - 4);
+        ctx.lineTo(lx - 4, ly + 4);
+        ctx.lineTo(lx + 4, ly + 4);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
     // time labels
     ctx.fillStyle = 'rgba(255,255,255,0.35)';
     ctx.textBaseline = 'top';
@@ -988,9 +1155,10 @@
   renderConnectionStatus();
   renderTimeframeButtons();
   renderTimeframeLabels();
+  startCandleCountdown();
   loadHistory().then(function () { connectWebSocket(); });
 })();
 </script>
 </body>
-  </html>
+          </html>
   
