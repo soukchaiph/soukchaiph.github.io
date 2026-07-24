@@ -127,22 +127,18 @@
           </span>
         </div>
         <div class="flex items-center gap-1.5">
-          <button type="button" id="tf-btn-30s" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">30s</button>
           <button type="button" id="tf-btn-1m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">1m</button>
           <button type="button" id="tf-btn-3m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">3m</button>
           <button type="button" id="tf-btn-5m" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">5m</button>
           <button type="button" id="tf-btn-1h" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">1h</button>
         </div>
       </div>
-      <p id="tf-30s-warning" class="hidden text-[11px] text-amber bg-amber/10 border border-amber/20 rounded-lg px-3 py-2 mb-3 leading-relaxed">
-        ⚠️ 30 วินาทีไม่ใช่ timeframe มาตรฐานของ Binance — พี่รวมจากแท่งเทียน 1 วินาทีให้ ข้อมูลและ indicator ในกรอบนี้จะแกว่ง/มี noise สูงกว่ากรอบเวลาอื่นมาก ใช้วิจารณญาณเป็นพิเศษ
-      </p>
       <div class="flex flex-wrap items-center gap-4 text-xs mb-3">
         <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm" style="background:#00c076"></span>แท่งขึ้น</span>
         <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm" style="background:#ff3b30"></span>แท่งลง</span>
         <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-0.5" style="background:#f0b90b"></span>EMA เร็ว</span>
         <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-0.5" style="background:#7dd3fc"></span>EMA ช้า</span>
-        <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm bg-white/10 border border-white/20"></span><span id="bb-legend-label">Bollinger 20</span></span>
+        <span class="flex items-center gap-1.5 text-gray-400"><span class="w-2.5 h-2.5 rounded-sm bg-white/10 border border-white/20"></span>Bollinger 20</span>
         <span class="flex items-center gap-1.5 text-gray-400">
           <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,1 9,8 1,8" fill="#eaecef" opacity="0.9"/></svg>
           Williams Fractal
@@ -165,37 +161,37 @@
         <p id="trend-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
       </div>
       <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p id="rsi-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Momentum · RSI 14</p>
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Momentum · RSI 14</p>
         <p class="text-[11px] text-gray-600 mb-2 leading-snug">วัดว่าช่วงที่ผ่านมาราคาขึ้นหรือลงเร็วเกินไปหรือไม่</p>
         <p id="rsi-value" class="text-lg font-bold font-mono mb-1">--</p>
         <p id="rsi-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
       </div>
       <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p id="stoch-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Stochastic · 14,3,3</p>
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Stochastic · 14,3,3</p>
         <p class="text-[11px] text-gray-600 mb-2 leading-snug">เทียบราคาปิดกับช่วงสูงสุด-ต่ำสุดล่าสุด โมเมนตัมคล้าย RSI</p>
         <p id="stoch-value" class="text-lg font-bold font-mono mb-1">--</p>
         <p id="stoch-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
       </div>
       <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p id="macd-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">MACD · 12,26,9</p>
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">MACD · 12,26,9</p>
         <p class="text-[11px] text-gray-600 mb-2 leading-snug">เทียบความเร็วเส้นค่าเฉลี่ย 2 เส้น บอกโมเมนตัมระยะสั้น</p>
         <p id="macd-value" class="text-lg font-bold font-mono mb-1">--</p>
         <p id="macd-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
       </div>
       <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p id="bb-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Volatility · Bollinger 20</p>
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">Volatility · Bollinger 20</p>
         <p class="text-[11px] text-gray-600 mb-2 leading-snug">กรอบที่ราคามักแกว่งอยู่ภายใน ยิ่งกว้างยิ่งผันผวน</p>
         <p id="bb-value" class="text-lg font-bold font-mono mb-1">--</p>
         <p id="bb-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
       </div>
       <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p id="atr-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">ATR · 14</p>
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">ATR · 14</p>
         <p class="text-[11px] text-gray-600 mb-2 leading-snug">วัดว่าแต่ละแท่งเทียนแกว่งกว้างแค่ไหนโดยเฉลี่ย</p>
         <p id="atr-value" class="text-lg font-bold font-mono mb-1">--</p>
         <p id="atr-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
       </div>
       <div class="bg-base-card border border-white/5 rounded-2xl p-5">
-        <p id="adx-header" class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">ADX · 14</p>
+        <p class="text-[11px] text-gray-500 uppercase tracking-[0.12em] mb-1">ADX · 14</p>
         <p class="text-[11px] text-gray-600 mb-2 leading-snug">วัดว่าตลาดมีแนวโน้มชัดเจนแค่ไหน ไม่ได้บอกทิศทางเอง</p>
         <p id="adx-value" class="text-lg font-bold font-mono mb-1">--</p>
         <p id="adx-label" class="text-xs text-gray-400">กำลังโหลดข้อมูล…</p>
@@ -250,32 +246,22 @@
   var VISIBLE_CANDLES = 60;
   var MAX_RECONNECT_DELAY = 30000;
 
-  // Every other timeframe keeps the industry-standard RSI/MACD/Bollinger/Stochastic/ATR/ADX
-  // periods (14 / 12,26,9 / 20 / 14,3,3 / 14 / 14) since those are the near-universal defaults
-  // regardless of candle size, and only the EMA pair is conventionally slower on calmer charts.
-  // 30s is the one exception: it only gets ~33 candles of initial history (Binance's REST cap is
-  // 1000 1s bars), which isn't enough runway for standard periods to even produce a value — so its
-  // periods are shortened across the board, a direct technical response to that data limit rather
-  // than a claim that shorter periods predict anything better.
-  // '30s' is not a real Binance interval — it's synthesized client-side from the 1s kline stream,
-  // marked with synthetic:true so the UI can disclose that plainly.
+  // Each timeframe keeps the industry-standard RSI/MACD/Bollinger periods (14 / 12,26,9 / 20)
+  // since those are the near-universal defaults regardless of candle size. The EMA pair is the
+  // one place a slightly slower pair is conventionally used on a calmer, less noisy timeframe.
   var TIMEFRAME_CONFIG = {
-    '30s': { label: '30 วินาที', kline: '30s', emaFast: 5, emaSlow: 13, rsi: 9, macdFast: 5, macdSlow: 13, macdSignal: 5, bbPeriod: 10, bbStddev: 2, stochK: 9, stochKSmooth: 3, stochD: 3, atrPeriod: 9, adxPeriod: 9, synthetic: true },
-    '1m': { label: '1 นาที', kline: '1m', emaFast: 9,  emaSlow: 21, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2, stochK: 14, stochKSmooth: 3, stochD: 3, atrPeriod: 14, adxPeriod: 14 },
-    '3m': { label: '3 นาที', kline: '3m', emaFast: 9,  emaSlow: 21, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2, stochK: 14, stochKSmooth: 3, stochD: 3, atrPeriod: 14, adxPeriod: 14 },
-    '5m': { label: '5 นาที', kline: '5m', emaFast: 12, emaSlow: 26, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2, stochK: 14, stochKSmooth: 3, stochD: 3, atrPeriod: 14, adxPeriod: 14 },
-    '1h': { label: '1 ชั่วโมง', kline: '1h', emaFast: 20, emaSlow: 50, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2, stochK: 14, stochKSmooth: 3, stochD: 3, atrPeriod: 14, adxPeriod: 14 }
+    '1m': { label: '1 นาที', kline: '1m', emaFast: 9,  emaSlow: 21, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 },
+    '3m': { label: '3 นาที', kline: '3m', emaFast: 9,  emaSlow: 21, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 },
+    '5m': { label: '5 นาที', kline: '5m', emaFast: 12, emaSlow: 26, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 },
+    '1h': { label: '1 ชั่วโมง', kline: '1h', emaFast: 20, emaSlow: 50, rsi: 14, macdFast: 12, macdSlow: 26, macdSignal: 9, bbPeriod: 20, bbStddev: 2 }
   };
-  var TIMEFRAME_ORDER = ['30s', '1m', '3m', '5m', '1h'];
-  var SYNTHETIC_FETCH_LIMIT = 1000; // Binance REST cap per request; ~16.6 min of 1s bars for the 30s view
+  var TIMEFRAME_ORDER = ['1m', '3m', '5m', '1h'];
 
   function buildWsUrl(symbol, interval) {
-    var realInterval = interval === '30s' ? '1s' : interval;
-    return 'wss://stream.binance.com:9443/stream?streams=' + symbol + '@ticker/' + symbol + '@kline_' + realInterval;
+    return 'wss://stream.binance.com:9443/stream?streams=' + symbol + '@ticker/' + symbol + '@kline_' + interval;
   }
-  function buildRestUrl(symbol, interval, limit) {
-    var realInterval = interval === '30s' ? '1s' : interval;
-    return 'https://api.binance.com/api/v3/klines?symbol=' + symbol.toUpperCase() + '&interval=' + realInterval + '&limit=' + (limit || HISTORY_LIMIT);
+  function buildRestUrl(symbol, interval) {
+    return 'https://api.binance.com/api/v3/klines?symbol=' + symbol.toUpperCase() + '&interval=' + interval + '&limit=' + HISTORY_LIMIT;
   }
 
   // ---------------- State ----------------
@@ -357,40 +343,14 @@
   function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
   // ---------------- History (REST) ----------------
-  function aggregate1sTo30s(rawCandles) {
-    var bucketMs = 30000;
-    var buckets = {};
-    var order = [];
-    rawCandles.forEach(function (c) {
-      var bucketStart = Math.floor(c.t / bucketMs) * bucketMs;
-      if (!buckets[bucketStart]) {
-        buckets[bucketStart] = { t: bucketStart, o: c.o, h: c.h, l: c.l, c: c.c, v: c.v, buyVol: c.buyVol, closeTime: bucketStart + bucketMs - 1 };
-        order.push(bucketStart);
-      } else {
-        var b = buckets[bucketStart];
-        b.h = Math.max(b.h, c.h);
-        b.l = Math.min(b.l, c.l);
-        b.c = c.c;
-        b.v += c.v;
-        b.buyVol += c.buyVol;
-        b.closeTime = bucketStart + bucketMs - 1;
-      }
-    });
-    return order.map(function (t) { return buckets[t]; });
-  }
-
   function loadHistory() {
-    var cfg = TIMEFRAME_CONFIG[state.timeframe];
-    var isSynthetic = !!cfg.synthetic;
-    var fetchLimit = isSynthetic ? SYNTHETIC_FETCH_LIMIT : HISTORY_LIMIT;
-    return fetch(buildRestUrl(state.symbol, cfg.kline, fetchLimit))
+    var interval = TIMEFRAME_CONFIG[state.timeframe].kline;
+    return fetch(buildRestUrl(state.symbol, interval))
       .then(function (res) { return res.json(); })
       .then(function (raw) {
-        var parsed = raw.map(function (k) {
+        state.candles = raw.map(function (k) {
           return { t: k[0], o: parseFloat(k[1]), h: parseFloat(k[2]), l: parseFloat(k[3]), c: parseFloat(k[4]), v: parseFloat(k[5]), closeTime: k[6], buyVol: parseFloat(k[9]) };
         });
-        state.candles = isSynthetic ? aggregate1sTo30s(parsed) : parsed;
-        if (state.candles.length > HISTORY_LIMIT) state.candles = state.candles.slice(state.candles.length - HISTORY_LIMIT);
         recomputeIndicators();
         drawChart();
       })
@@ -487,23 +447,9 @@
   function renderTimeframeLabels() {
     var cfg = TIMEFRAME_CONFIG[state.timeframe];
     var intervalLabel = $('chart-interval-label');
-    var warning = $('tf-30s-warning');
+    var trendHeader = $('trend-header');
     if (intervalLabel) intervalLabel.textContent = 'แท่งเทียน ' + cfg.label;
-    if (warning) warning.classList.toggle('hidden', !cfg.synthetic);
-
-    setText('trend-header', 'Trend · EMA ' + cfg.emaFast + '/' + cfg.emaSlow);
-    setText('rsi-header', 'Momentum · RSI ' + cfg.rsi);
-    setText('stoch-header', 'Stochastic · ' + cfg.stochK + ',' + cfg.stochKSmooth + ',' + cfg.stochD);
-    setText('macd-header', 'MACD · ' + cfg.macdFast + ',' + cfg.macdSlow + ',' + cfg.macdSignal);
-    setText('bb-header', 'Volatility · Bollinger ' + cfg.bbPeriod);
-    setText('bb-legend-label', 'Bollinger ' + cfg.bbPeriod);
-    setText('atr-header', 'ATR · ' + cfg.atrPeriod);
-    setText('adx-header', 'ADX · ' + cfg.adxPeriod);
-  }
-
-  function setText(id, text) {
-    var node = $(id);
-    if (node) node.textContent = text;
+    if (trendHeader) trendHeader.textContent = 'Trend · EMA ' + cfg.emaFast + '/' + cfg.emaSlow;
   }
 
   function renderConnectionStatus() {
@@ -564,38 +510,16 @@
     var k = data.k;
     if (!k) return;
     var candle = { t: k.t, o: parseFloat(k.o), h: parseFloat(k.h), l: parseFloat(k.l), c: parseFloat(k.c), v: parseFloat(k.v), closeTime: k.T, buyVol: parseFloat(k.V) };
-    if (TIMEFRAME_CONFIG[state.timeframe].synthetic) {
-      mergeInto30sBucket(candle);
+    var candles = state.candles;
+    var last = candles[candles.length - 1];
+    if (last && last.t === candle.t) {
+      candles[candles.length - 1] = candle;
     } else {
-      var candles = state.candles;
-      var last = candles[candles.length - 1];
-      if (last && last.t === candle.t) {
-        candles[candles.length - 1] = candle;
-      } else {
-        candles.push(candle);
-        if (candles.length > HISTORY_LIMIT) candles.shift();
-      }
+      candles.push(candle);
+      if (candles.length > HISTORY_LIMIT) candles.shift();
     }
     recomputeIndicators();
     drawChart();
-  }
-
-  function mergeInto30sBucket(raw1s) {
-    var bucketMs = 30000;
-    var bucketStart = Math.floor(raw1s.t / bucketMs) * bucketMs;
-    var candles = state.candles;
-    var last = candles[candles.length - 1];
-    if (last && last.t === bucketStart) {
-      last.h = Math.max(last.h, raw1s.h);
-      last.l = Math.min(last.l, raw1s.l);
-      last.c = raw1s.c;
-      last.v += raw1s.v;
-      last.buyVol += raw1s.buyVol;
-      last.closeTime = bucketStart + bucketMs - 1;
-    } else {
-      candles.push({ t: bucketStart, o: raw1s.o, h: raw1s.h, l: raw1s.l, c: raw1s.c, v: raw1s.v, buyVol: raw1s.buyVol, closeTime: bucketStart + bucketMs - 1 });
-      if (candles.length > HISTORY_LIMIT) candles.shift();
-    }
   }
 
   // ---------------- Indicators ----------------
@@ -841,11 +765,11 @@
     state.bbUpper = bb.upper;
     state.bbMiddle = bb.middle;
     state.bbLower = bb.lower;
-    var stoch = computeStochastic(state.candles, cfg.stochK, cfg.stochKSmooth, cfg.stochD);
+    var stoch = computeStochastic(state.candles, 14, 3, 3);
     state.stochK = stoch.k;
     state.stochD = stoch.d;
-    state.atr = computeATR(state.candles, cfg.atrPeriod);
-    var adx = computeADX(state.candles, cfg.adxPeriod);
+    state.atr = computeATR(state.candles, 14);
+    var adx = computeADX(state.candles, 14);
     state.plusDI = adx.plusDI;
     state.minusDI = adx.minusDI;
     state.adx = adx.adx;
@@ -1220,7 +1144,6 @@
   }
 
   el.marketSelect.addEventListener('change', function () { switchMarket(this.value); });
-  $('tf-btn-30s').addEventListener('click', function () { switchTimeframe('30s'); });
   $('tf-btn-1m').addEventListener('click', function () { switchTimeframe('1m'); });
   $('tf-btn-3m').addEventListener('click', function () { switchTimeframe('3m'); });
   $('tf-btn-5m').addEventListener('click', function () { switchTimeframe('5m'); });
@@ -1237,5 +1160,5 @@
 })();
 </script>
 </body>
-  </html>
-                                                                       
+        </html>
+        
